@@ -54,16 +54,6 @@ ggplot() +
   coord_sf(crs = st_crs("ESRI:102003"))
 # Code adapted from https://www.andrewheiss.com/blog/2023/06/01/geocoding-routing-openstreetmap-r/
 
-stops_raw <- tribble(
-  ~day, ~city,
-  1, "Paro",
-  2, "Paro",
-  3, "Ha",
-  4, "Thimphu",
-  5, "Thimphu"
-) |>
-  mutate(direction = "There")
-
 stops_address <- tribble(
   ~day, ~place, ~address,
   1, "Paro International Airport", "Paro International Airport, Paro, Bhutan",
@@ -175,6 +165,19 @@ routes_geocoded_raw <- routes_raw %>%
 routes_geocoded <- routes_geocoded_raw %>%
   unnest(route, names_sep = "_") %>%
   st_set_geometry("route_geometry")
+
+leaflet(routes_geocoded) %>%
+  addProviderTiles("Esri.WorldImagery") %>%
+  addPolylines() %>%
+  addCircleMarkers(
+    lat = all_stops_unique$lat,
+    lng = all_stops_unique$lon,
+    # popup = paste(df$com,"-",format(df$time,"%H:%M:%S")),
+    color = "red",
+    stroke = FALSE,
+    radius = 8,
+    fillOpacity = 0.8
+  )
 
 ggplot() +
   geom_sf(data = bhutan_map) +
