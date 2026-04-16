@@ -9,6 +9,7 @@ library(osrm)
 library(ggrepel)
 library(scales)
 library(ggspatial)
+library(leaflet)
 
 bhutan_map <- ne_states(country = "Bhutan", returnclass = "sf")
 
@@ -137,13 +138,17 @@ stops_geocoded <- stops_address |>
       place == "Hontsho" ~ 89.71271,
       TRUE ~ long
     )
-  ) |>
+  )
+
+stops_sf <- stops_geocoded |>
   st_as_sf(coords = c("long", "lat"), crs = st_crs("EPSG:4326"))
 
+
+write_csv(stops_geocoded, "data/stops_geocoded.csv")
 all_stops_unique <- stops_geocoded |>
   distinct()
 
-routes_raw <- stops_geocoded |>
+routes_raw <- stops_sf |>
   select(-address) |>
   rename(
     origin_geometry = geometry,
@@ -171,12 +176,90 @@ leaflet(routes_geocoded) %>%
   addPolylines() %>%
   addCircleMarkers(
     lat = all_stops_unique$lat,
-    lng = all_stops_unique$lon,
+    lng = all_stops_unique$long,
     # popup = paste(df$com,"-",format(df$time,"%H:%M:%S")),
     color = "red",
     stroke = FALSE,
     radius = 8,
     fillOpacity = 0.8
+  )
+
+library(leaflet)
+library(dplyr)
+
+# 1. Assign categories to your stops
+all_stops_unique <- all_stops_unique %>%
+  mutate(category = case_when(
+    grepl("Airport", place, ignore.case = TRUE) ~ "airport",
+    grepl("Nest|Hike|Trek", place, ignore.case = TRUE) ~ "hiking",
+    grepl("Camp", place, ignore.case = TRUE) ~ "camping",
+    grepl("Dzong|Temple|Monastery|Nunnery|Goenpa", place, ignore.case = TRUE) ~ "temple",
+    grepl("Pass|Peak|Mountain", place, ignore.case = TRUE) ~ "nature",
+    TRUE ~ "culture"
+  ))
+
+# 2. Define icons for each category
+icons <- awesomeIconList(
+  airport  = makeAwesomeIcon(icon = "plane", library = "fa", markerColor = "blue"),
+  hiking   = makeAwesomeIcon(icon = "male", library = "fa", markerColor = "green"),
+  camping  = makeAwesomeIcon(icon = "fire", library = "fa", markerColor = "orange"),
+  temple   = makeAwesomeIcon(icon = "building", library = "fa", markerColor = "red"),
+  nature   = makeAwesomeIcon(icon = "leaf", library = "fa", markerColor = "darkgreen"),
+  culture  = makeAwesomeIcon(icon = "camera", library = "fa", markerColor = "purple")
+)
+
+# 3. Build the map
+leaflet(routes_geocoded) %>%
+  addProviderTiles("Esri.WorldImagery") %>%
+  # Route lines, coloured by day
+  addPolylines(
+    color = ~ colorFactor("RdYlBu", domain = routes_geocoded$day)(day),
+    weight = 3,
+    opacity = 0.8,
+    popup = ~ paste(
+      "Day", day, "<br>", origin_place, "→", destination_place,
+      "<br>Distance:", round(route_distance, 1), "km",
+      "<br>Duration:", round(route_duration, 1), "mins"
+    )
+  ) %>%
+  # Place markers with category icons
+  addAwesomeMarkers(
+    data = all_stops_unique,
+    lat = ~lat,
+    lng = ~long,
+    icon = ~ icons[category],
+    label = ~place, # hover label = place name
+    popup = ~ paste0(
+      "<b>", place, "</b><br>",
+      "Day: ", day, "<br>",
+      "Category: ", category
+    )
+  ) %>%
+  # Place name labels (permanent, not just on hover)
+  addLabelOnlyMarkers(
+    data = all_stops_unique,
+    lat = ~lat,
+    lng = ~long,
+    label = ~place,
+    labelOptions = labelOptions(
+      noHide = TRUE,
+      direction = "top",
+      textOnly = TRUE,
+      style = list(
+        "font-weight" = "bold",
+        "font-size"   = "11px",
+        "color"       = "white",
+        "text-shadow" = "1px 1px 2px black"
+      )
+    )
+  ) %>%
+  # Legend for icon categories
+  addLegend(
+    position = "bottomright",
+    colors   = c("blue", "green", "orange", "red", "darkgreen", "purple"),
+    labels   = c("Airport", "Hiking", "Camping", "Temple/Monastery", "Nature", "Culture"),
+    title    = "Place type",
+    opacity  = 0.8
   )
 
 ggplot() +
