@@ -10,6 +10,7 @@ library(ggrepel)
 library(scales)
 library(ggspatial)
 library(leaflet)
+library(fontawesome)
 
 bhutan_map <- ne_states(country = "Bhutan", returnclass = "sf")
 
@@ -58,15 +59,16 @@ ggplot() +
 stops_address <- tribble(
   ~day, ~place, ~address,
   1, "Paro International Airport", "Paro International Airport, Paro, Bhutan",
-  2, "Paro Dzong", "Rinpung, Paro, Bhutan",
+  2, "Tshechu Festival", "Rinpung courtyard, Paro, Bhutan",
+  2, "Rinpung Dzong", "Rinpung, Paro, Bhutan",
   3, "Tiger's Nest", "Paro Taktsang, Paro, Bhutan",
   4, "Kila Goenpa Nunnery", "Kila Goenpa, Paro, Bhutan",
   4, "Chelela Pass", "Chele La Pass, Paro, Bhutan",
   4, "White Temple", "Lhakhang Karpo, Haa, Bhutan",
   5, "Tango Monastery", "Tango Monastery, Thimphu, Bhutan",
-  5, "Thimphu", "Motithang Takin Preserve, Thimphu, Bhutan",
+  5, "Takin Preserve", "Motithang Takin Preserve, Thimphu, Bhutan",
   6, "Thimphu", "Thimphu, Bhutan",
-  6, "Thimphu", "Folk Heritage Museum Kawajangsa, Thimphu, Bhutan",
+  6, "Folk Heritage Museum", "Folk Heritage Museum Kawajangsa, Thimphu, Bhutan",
   7, "Dochula Pass", "Dochula Pass, Thimphu, Bhutan",
   7, "Teoprongchu", "Teoprongchu, Bhutan",
   7, "Chimi Lhakhang (The Temple of Fertility)", "Chimi Lhakhang, Punakha, Bhutan",
@@ -93,10 +95,49 @@ stops_address <- tribble(
   13, "Paro International Airport", "Paro International Airport, Paro, Bhutan"
 )
 
+stops_address <- tribble(
+  ~day, ~place, ~address,
+  1, "Tshechu Festival", "Rinpung courtyard, Paro, Bhutan",
+  1, "Rinpung Dzong", "Rinpung, Paro, Bhutan",
+  2, "Tiger's Nest", "Paro Taktsang, Paro, Bhutan",
+  3, "Kila Goenpa Nunnery", "Kila Goenpa, Paro, Bhutan",
+  3, "Chelela Pass", "Chele La Pass, Paro, Bhutan",
+  3, "White Temple", "Lhakhang Karpo, Haa, Bhutan",
+  3, "Chukha", "Chukha, Bhutan",
+  4, "Tango Monastery", "Tango Monastery, Thimphu, Bhutan",
+  4, "Takin Preserve", "Motithang Takin Preserve, Thimphu, Bhutan",
+  5, "Thimphu", "Thimphu, Bhutan",
+  5, "Folk Heritage Museum", "Folk Heritage Museum Kawajangsa, Thimphu, Bhutan",
+  6, "Dochula Pass", "Dochula Pass, Thimphu, Bhutan",
+  6, "Teoprongchu", "Teoprongchu, Bhutan",
+  6, "Chimi Lhakhang (The Temple of Fertility)", "Chimi Lhakhang, Punakha, Bhutan",
+  7, "Khamsum Yulley Namgyal Chorten", "Khamsum Yulley Namgyal Chörten, Thimphu-Punakha Hwy, Bhutan",
+  7, "Mo Chhu River, Punakha", "Khamsum Yueli, Namgyal 13001, Bhutan",
+  7, "Sangchen Dorji Lhuendrup Nunnery", "Sangchhen Dorji Lhuendrup Nunnery, Punakha, Bhutan",
+  7, "Wangdue Ecolodge", "Wangdue Ecolodge, Damina Village, Ngashigaykha, Rubesa, Wangdue Phodrang, 14001, Bhutan",
+  8, "Wangdue Dzong", "Wangdue Phodrang Dzong, Wangdue Phodrang, Bhutan",
+  8, "Lawala Pass", "Lawala Pass, Dungdungneysa, Bhutan",
+  8, "Gangtey Monastery", "Gangtey Monastery, Phobjikha Valley, Bhutan",
+  #8, "Phobjikha View Point", "Phobjikha View Point, Phobjikha Valley, Bhutan",
+  8, "Black Necked Crane Visitor Centre", "Black Necked Crane Visitor Centre, Phobjikha, Bhutan",
+  8, "Gangtey Tent Resort", "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan",
+  9, "Kumbu", "Kumbu, Bhutan",
+  9, "Kaychela Pass", "Kaychela Pass, Bhutan",
+  9, "Longtey", "Longtey, Bhutan",
+  9, "Gangtey Tent Resort", "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan",
+  10, "Himalayan Keys Forest Resort", "Himalayan Keys Forest Resort, Zhori Zur Lam, Thimphu, Bhutan",
+  10, "TaBar Nye Monastery", "TaBar Nye, Thimphu, Bhutan",
+  10, "Camp", "Thadrana Telecom Tower Junction, Thimphu, Bhutan",
+  10, "Gyalpo Pelzang Peak", "Thadrana Telecom Tower point, Yusipang, Bhutan",
+  11, "Hontsho", "Hontsho Picnic, Hungtsho, Bhutan",
+  11, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan"
+)
+
 stops_geocoded <- stops_address |>
   geocode(address, method = "osm") |>
   mutate(
     lat = case_when(
+      place == "Tshechu Festival" ~ 27.42960,
       place == "Kila Goenpa Nunnery" ~ 27.39064,
       place == "Khamsum Yulley Namgyal Chorten" ~ 27.62631,
       place == "Mo Chhu River, Punakha" ~ 27.62371,
@@ -118,6 +159,7 @@ stops_geocoded <- stops_address |>
       TRUE ~ lat
     ),
     long = case_when(
+      place == "Tshechu Festival" ~ 89.40768,
       place == "Kila Goenpa Nunnery" ~ 89.36146,
       place == "Khamsum Yulley Namgyal Chorten" ~ 89.80070,
       place == "Mo Chhu River, Punakha" ~ 89.80130,
@@ -139,14 +181,32 @@ stops_geocoded <- stops_address |>
       TRUE ~ long
     )
   )
+write_csv(stops_geocoded, "data/stops_geocoded.csv")
+
+towbs <- tribble(
+  ~day, ~town,        ~hotel,                      ~address,
+  1,    "Paro",       "Tashi Namgay Resort",        "Tashi Namgay Resort, Paro, Bhutan",
+  2,    "Paro",       "Tashi Namgay Resort",        "Tashi Namgay Resort, Paro, Bhutan",
+  3,    "Haa",        "Sonam Zhidey Resort",        "Sonam Zhidey Resort, Haa, Bhutan",
+  4,    "Thimphu",    "Norkhil Boutique Hotel",     "Norkhil Boutique Hotel, Thimphu, Bhutan",
+  5,    "Thimphu",    "Norkhil Boutique Hotel",     "Norkhil Boutique Hotel, Thimphu, Bhutan",
+  6,    "Punakha",    "Dumra Farm Resort",          "Dumra Farm Resort, Punakha, Bhutan",
+  7,    "Wangdue",    "Wangdue Ecolodge",           "Wangdue Ecolodge, Damina Village, Ngashigaykha, Rubesa, Wangdue Phodrang, 14001, Bhutan",
+  8,    "Gangtey",    "Gangtey Tent Resort",        "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan",
+  9,    "Gangtey",    "Gangtey Tent Resort",        "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan",
+  10, "Thimphu", "Himalayan Keys Forest Resort", "Himalayan Keys Forest Resort, Zhori Zur Lam, Thimphu, Bhutan"
+)
+
+stops_geocoded <- read_csv("data/stops_geocoded.csv")
+
+all_stops_unique <- stops_geocoded |>
+  distinct()
 
 stops_sf <- stops_geocoded |>
   st_as_sf(coords = c("long", "lat"), crs = st_crs("EPSG:4326"))
 
 
-write_csv(stops_geocoded, "data/stops_geocoded.csv")
-all_stops_unique <- stops_geocoded |>
-  distinct()
+
 
 routes_raw <- stops_sf |>
   select(-address) |>
@@ -184,60 +244,64 @@ leaflet(routes_geocoded) %>%
     fillOpacity = 0.8
   )
 
-library(leaflet)
-library(dplyr)
 
 # 1. Assign categories to your stops
-all_stops_unique <- all_stops_unique %>%
+all_stops_cat <- all_stops_unique %>%
   mutate(category = case_when(
-    grepl("Airport", place, ignore.case = TRUE) ~ "airport",
-    grepl("Nest|Hike|Trek", place, ignore.case = TRUE) ~ "hiking",
+    #grepl("Airport", place, ignore.case = TRUE) ~ "airport",
+    #grepl("Nest|Hike|Trek|Chelela", place, ignore.case = TRUE) ~ "hiking",
     grepl("Camp", place, ignore.case = TRUE) ~ "camping",
-    grepl("Dzong|Temple|Monastery|Nunnery|Goenpa", place, ignore.case = TRUE) ~ "temple",
-    grepl("Pass|Peak|Mountain", place, ignore.case = TRUE) ~ "nature",
-    TRUE ~ "culture"
+    grepl("River", place, ignore.case = TRUE) ~ "rafting",
+    grepl("Dzong|Temple|Monastery|Nunnery|Goenpa|Nest", place, ignore.case = TRUE) ~ "temple",
+    grepl("View|Black|Preserve", place, ignore.case = TRUE) ~ "wildlife",
+    #grepl("Resort|Ecolodge", place, ignore.case = TRUE) ~ "hotel",
+    grepl("Heritage|Festival", place, ignore.case = TRUE) ~ "culture",
+    TRUE ~ "other"
   ))
 
 # 2. Define icons for each category
 icons <- awesomeIconList(
   airport  = makeAwesomeIcon(icon = "plane", library = "fa", markerColor = "blue"),
-  hiking   = makeAwesomeIcon(icon = "male", library = "fa", markerColor = "green"),
-  camping  = makeAwesomeIcon(icon = "fire", library = "fa", markerColor = "orange"),
-  temple   = makeAwesomeIcon(icon = "building", library = "fa", markerColor = "red"),
-  nature   = makeAwesomeIcon(icon = "leaf", library = "fa", markerColor = "darkgreen"),
-  culture  = makeAwesomeIcon(icon = "camera", library = "fa", markerColor = "purple")
+  rafting   = makeAwesomeIcon(icon = "canoe-person", library = "fa", markerColor = "green"),
+  camping  = makeAwesomeIcon(icon = "tent", library = "fa", markerColor = "orange"),
+  temple   = makeAwesomeIcon(icon = "landmark", library = "fa", markerColor = "red"),
+  wildlife   = makeAwesomeIcon(icon = "leaf", library = "fa", markerColor = "darkgreen"),
+  culture  = makeAwesomeIcon(icon = "camera", library = "fa", markerColor = "white")
+ # hotel = makeAwesomeIcon(icon = "bed", library = "fa", markerColor = "white")
 )
 
 # 3. Build the map
 leaflet(routes_geocoded) %>%
-  addProviderTiles("Esri.WorldImagery") %>%
+  #addProviderTiles("Esri.WorldImagery") %>%
+  addProviderTiles("CartoDB.Positron") |> 
   # Route lines, coloured by day
   addPolylines(
-    color = ~ colorFactor("RdYlBu", domain = routes_geocoded$day)(day),
+    #color = ~ colorFactor("RdYlBu", domain = routes_geocoded$day)(day),
     weight = 3,
-    opacity = 0.8,
-    popup = ~ paste(
-      "Day", day, "<br>", origin_place, "→", destination_place,
-      "<br>Distance:", round(route_distance, 1), "km",
-      "<br>Duration:", round(route_duration, 1), "mins"
-    )
+    opacity = 0.8
+    #popup = ~ paste(
+     # "Day", day, "<br>", origin_place, "→", destination_place,
+      #"<br>Distance:", round(route_distance, 1), "km",
+      #"<br>Duration:", round(route_duration, 1), "mins"
+    #)
   ) %>%
   # Place markers with category icons
   addAwesomeMarkers(
-    data = all_stops_unique,
+    data = all_stops_cat %>% filter(category != "other"),
     lat = ~lat,
     lng = ~long,
     icon = ~ icons[category],
-    label = ~place, # hover label = place name
-    popup = ~ paste0(
-      "<b>", place, "</b><br>",
-      "Day: ", day, "<br>",
-      "Category: ", category
-    )
-  ) %>%
+    #label = ~place, # hover label = place name
+    #popup = ~ paste0(
+     # "<b>", place, "</b><br>",
+      #"Day: ", day, "<br>",
+      #"Category: ", category
+    #)
+  ) 
+#%>%
   # Place name labels (permanent, not just on hover)
   addLabelOnlyMarkers(
-    data = all_stops_unique,
+    data = all_stops_cat,
     lat = ~lat,
     lng = ~long,
     label = ~place,
@@ -252,15 +316,53 @@ leaflet(routes_geocoded) %>%
         "text-shadow" = "1px 1px 2px black"
       )
     )
-  ) %>%
+  ) 
+#%>%
   # Legend for icon categories
-  addLegend(
+ # addLegend(
     position = "bottomright",
     colors   = c("blue", "green", "orange", "red", "darkgreen", "purple"),
     labels   = c("Airport", "Hiking", "Camping", "Temple/Monastery", "Nature", "Culture"),
     title    = "Place type",
     opacity  = 0.8
   )
+icons_square <- awesomeIconList(
+  airport  = makeAwesomeIcon(icon = "plane",    library = "fa", markerColor = "white", iconColor = "blue",      squareMarker = TRUE),
+  rafting  = makeAwesomeIcon(icon = "ship",     library = "fa", markerColor = "white", iconColor = "green",     squareMarker = TRUE),
+  camping  = makeAwesomeIcon(icon = "fire",     library = "fa", markerColor = "white", iconColor = "orange",    squareMarker = TRUE),
+  temple   = makeAwesomeIcon(icon = "building", library = "fa", markerColor = "white", iconColor = "red",       squareMarker = TRUE),
+  wildlife = makeAwesomeIcon(icon = "leaf",     library = "fa", markerColor = "white", iconColor = "darkgreen", squareMarker = TRUE),
+  culture  = makeAwesomeIcon(icon = "camera",   library = "fa", markerColor = "white", iconColor = "purple",    squareMarker = TRUE)
+)
+
+leaflet(routes_geocoded) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolylines(
+    weight  = 3,
+    opacity = 0.8
+  ) %>%
+  addAwesomeMarkers(
+    data  = all_stops_cat %>% filter(category %in% names(icons_square)),
+    lat   = ~lat,
+    lng   = ~long,
+    icon  = ~icons_square[category],
+    label = ~place,
+    popup = ~paste0("<b>", place, "</b><br>", "Day: ", day, "<br>", "Category: ", category)
+  ) %>%
+  addLabelOnlyMarkers(
+    data  = all_stops_cat,
+    lat   = ~lat,
+    lng   = ~long,
+    label = ~place,
+    labelOptions = labelOptions(
+      noHide    = TRUE,
+      direction = "top",
+      textOnly  = TRUE,
+      style     = list("font-weight" = "bold", "font-size" = "11px",
+                       "color" = "white", "text-shadow" = "1px 1px 2px black")
+    )
+  )
+
 
 ggplot() +
   geom_sf(data = bhutan_map) +
@@ -328,3 +430,102 @@ stops_to_geocode <- stops_raw |>
   left_join(stops_addresses, by = join_by(city)) %>%
   # Combine the address and city columns, with a preference for address
   mutate(address = coalesce(address, city))
+
+library(leaflet)
+library(dplyr)
+
+
+leaflet(routes_geocoded) %>%
+  addProviderTiles("Stadia.StamenTerrainBackground") %>%
+  addPolylines(
+    #color = ~colorFactor("RdYlBu", domain = routes_geocoded$day)(day),
+    color = ~colorFactor(viridisLite::mako(12, direction = -1), domain = routes_geocoded$day, alpha = 0.5) (day),
+    weight = 3,
+    opacity = 0.5,
+    #popup = ~paste("Day", day, "<br>", origin_place, "→", destination_place,
+     #              "<br>Distance:", round(route_distance, 1), "km",
+      #             "<br>Duration:", round(route_duration, 1), "mins")
+  ) %>%
+  addAwesomeMarkers(
+    data = all_stops_cat %>% filter(category != "other"),
+    lat  = ~lat,
+    lng  = ~long,
+    icon = ~icons_square[category],
+    label = ~place,
+    #popup = ~paste0("<b>", place, "</b><br>", "Day: ", day, "<br>", "Category: ", category)
+  ) #%>%
+ # addLabelOnlyMarkers(
+  #  data = all_stops_cat,
+   # lat  = ~lat,
+    #lng  = ~long,
+    #label = ~place,
+    #labelOptions = labelOptions(
+     # noHide = TRUE, direction = "top", textOnly = TRUE,
+      #style = list("font-weight" = "bold", "font-size" = "11px",
+       #            "color" = "white", "text-shadow" = "1px 1px 2px black")
+    #)
+  )
+
+
+fa_icons <- iconList(
+  airport  = makeIcon(
+    iconUrl    = "https://img.icons8.com/color/48/airport.png",
+    iconWidth  = 30,
+    iconHeight = 30
+  ),
+  rafting  = makeIcon(
+    iconUrl    = "https://img.icons8.com/color/48/rafting.png",
+    iconWidth  = 30,
+    iconHeight = 30
+  ),
+  camping  = makeIcon(
+    iconUrl    = "https://img.icons8.com/color/48/camping-tent.png",
+    iconWidth  = 30,
+    iconHeight = 30
+  ),
+  temple   = makeIcon(
+    iconUrl    = "https://img.icons8.com/color/48/temple.png",
+    iconWidth  = 30,
+    iconHeight = 30
+  ),
+  wildlife = makeIcon(
+    iconUrl    = "https://img.icons8.com/color/48/deer.png",
+    iconWidth  = 30,
+    iconHeight = 30
+  ),
+  culture  = makeIcon(
+    iconUrl    = "https://img.icons8.com/color/48/camera.png",
+    iconWidth  = 30,
+    iconHeight = 30
+  )
+)
+
+leaflet(routes_geocoded) %>%
+  #addProviderTiles("CartoDB.Positron") %>%
+  addProviderTiles("Stadia.StamenTerrainBackground") %>%
+  addPolylines(
+    weight  = 3,
+    opacity = 0.5,
+    color = "lightgrey",
+  ) %>%
+  addMarkers(
+    data  = all_stops_cat %>% filter(category %in% names(fa_icons)),
+    lat   = ~lat,
+    lng   = ~long,
+    icon  = ~fa_icons[category],
+    label = ~place,
+    popup = ~paste0("<b>", place, "</b><br>", "Day: ", day, "<br>", "Category: ", category)
+  ) #%>%
+  #addLabelOnlyMarkers(
+   # data  = all_stops_cat,
+    #lat   = ~lat,
+    #lng   = ~long,
+    #label = ~place,
+    #labelOptions = labelOptions(
+     # noHide    = TRUE,
+      #direction = "top",
+      #textOnly  = TRUE,
+      #style     = list("font-weight" = "bold", "font-size" = "11px",
+       #                "color" = "black", "text-shadow" = "1px 1px 2px white")
+    #)
+ # )
