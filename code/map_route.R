@@ -96,47 +96,57 @@ stops_address <- tribble(
 )
 
 stops_address <- tribble(
-  ~day, ~place, ~address,
-  1, "Tshechu Festival", "Rinpung courtyard, Paro, Bhutan",
-  1, "Rinpung Dzong", "Rinpung, Paro, Bhutan",
-  2, "Tiger's Nest", "Paro Taktsang, Paro, Bhutan",
-  3, "Kila Goenpa Nunnery", "Kila Goenpa, Paro, Bhutan",
-  3, "Chelela Pass", "Chele La Pass, Paro, Bhutan",
-  3, "White Temple", "Lhakhang Karpo, Haa, Bhutan",
-  3, "Chukha", "Chukha, Bhutan",
-  4, "Tango Monastery", "Tango Monastery, Thimphu, Bhutan",
-  4, "Takin Preserve", "Motithang Takin Preserve, Thimphu, Bhutan",
-  5, "Thimphu", "Thimphu, Bhutan",
-  5, "Folk Heritage Museum", "Folk Heritage Museum Kawajangsa, Thimphu, Bhutan",
-  6, "Dochula Pass", "Dochula Pass, Thimphu, Bhutan",
-  6, "Teoprongchu", "Teoprongchu, Bhutan",
-  6, "Chimi Lhakhang (The Temple of Fertility)", "Chimi Lhakhang, Punakha, Bhutan",
-  7, "Khamsum Yulley Namgyal Chorten", "Khamsum Yulley Namgyal Chörten, Thimphu-Punakha Hwy, Bhutan",
-  7, "Mo Chhu River, Punakha", "Khamsum Yueli, Namgyal 13001, Bhutan",
-  7, "Sangchen Dorji Lhuendrup Nunnery", "Sangchhen Dorji Lhuendrup Nunnery, Punakha, Bhutan",
-  7, "Wangdue Ecolodge", "Wangdue Ecolodge, Damina Village, Ngashigaykha, Rubesa, Wangdue Phodrang, 14001, Bhutan",
-  8, "Wangdue Dzong", "Wangdue Phodrang Dzong, Wangdue Phodrang, Bhutan",
-  8, "Lawala Pass", "Lawala Pass, Dungdungneysa, Bhutan",
-  8, "Gangtey Monastery", "Gangtey Monastery, Phobjikha Valley, Bhutan",
-  #8, "Phobjikha View Point", "Phobjikha View Point, Phobjikha Valley, Bhutan",
-  8, "Black Necked Crane Visitor Centre", "Black Necked Crane Visitor Centre, Phobjikha, Bhutan",
-  8, "Gangtey Tent Resort", "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan",
-  9, "Kumbu", "Kumbu, Bhutan",
-  9, "Kaychela Pass", "Kaychela Pass, Bhutan",
-  9, "Longtey", "Longtey, Bhutan",
-  9, "Gangtey Tent Resort", "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan",
+  ~day, ~place, ~address, ~route_type
+  1, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan", "driving",
+  1, "Rinpung Dzong", "Rinpung, Paro, Bhutan", "walking",
+  1, "Tshechu Festival", "Rinpung courtyard, Paro, Bhutan", "driving",
+  2, "Tiger's Nest Road End", "Road end, Paro Taktsang, Paro, Bhutan", "walking",
+  2, "Tiger's Nest", "Paro Taktsang, Paro, Bhutan", "walking",
+  2, "Tiger's Nest Road End", "Road end, Paro Taktsang, Paro, Bhutan", "driving",
+  3, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan", "driving",
+  3, "Kila Goenpa Nunnery", "Kila Goenpa, Paro, Bhutan", "walking",
+  3, "Chelela Pass", "Chele La Pass, Paro, Bhutan", "driving",
+  3, "White Temple", "Lhakhang Karpo, Haa, Bhutan", "driving",
+  #3, "Chukha", "Chukha, Bhutan",
+  4, "Tango Monastery Roadend", "Tango Monastery, Thimphu, Bhutan", "walking",
+  4, "Tango Monastery", "Tango Monastery Roadend, Thimphu, Bhutan", "walking",
+  4, "Tango Monastery Roadend", "Tango Monastery, Thimphu, Bhutan", "driving",
+  4, "Takin Preserve", "Motithang Takin Preserve, Thimphu, Bhutan", "driving",
+  5, "Norkhil Boutique Hotel",     "Norkhil Boutique Hotel, Thimphu, Bhutan", "driving",
+  5, "Folk Heritage Museum", "Folk Heritage Museum Kawajangsa, Thimphu, Bhutan", "driving",
+  6, "Dochula Pass", "Dochula Pass, Thimphu, Bhutan", "driving",
+  6, "Teoprongchu", "Teoprongchu, Bhutan", "walking",
+  6, "Chimi Lhakhang (The Temple of Fertility)", "Chimi Lhakhang, Punakha, Bhutan", "walking",
+  6, "Teoprongchu", "Teoprongchu, Bhutan", "driving",
+  7, "Mo Chhu River, Punakha", "Khamsum Yueli, Namgyal 13001, Bhutan", "walking",
+  7, "Khamsum Yulley Namgyal Chorten", "Khamsum Yulley Namgyal Chörten, Thimphu-Punakha Hwy, Bhutan", "walking",
+  7, "Mo Chhu River, Punakha", "Khamsum Yueli, Namgyal 13001, Bhutan", "driving",
+  7, "Sangchen Dorji Lhuendrup Nunnery", "Sangchhen Dorji Lhuendrup Nunnery, Punakha, Bhutan", "driving",
+  7, "Wangdue Ecolodge", "Wangdue Ecolodge, Damina Village, Ngashigaykha, Rubesa, Wangdue Phodrang, 14001, Bhutan", "driving",
+  8, "Wangdue Dzong", "Wangdue Phodrang Dzong, Wangdue Phodrang, Bhutan", "driving",
+  8, "Lawala Pass", "Lawala Pass, Dungdungneysa, Bhutan", "driving",
+  8, "Gangtey Monastery", "Gangtey Monastery, Phobjikha Valley, Bhutan", "walking",
+  8, "Phobjikha View Point", "Phobjikha View Point, Phobjikha Valley, Bhutan", "driving",
+  8, "Black Necked Crane Visitor Centre", "Black Necked Crane Visitor Centre, Phobjikha, Bhutan", "driving",
+  8, "Gangtey Tent Resort", "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan", "driving",
+  9, "Kumbu", "Kumbu, Bhutan", "walking",
+  9, "Kaychela Pass", "Kaychela Pass, Bhutan","walking",
+  9, "Longtey", "Longtey, Bhutan", "driving",
+  9, "Gangtey Tent Resort", "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan", "driving",
   10, "Himalayan Keys Forest Resort", "Himalayan Keys Forest Resort, Zhori Zur Lam, Thimphu, Bhutan",
-  10, "TaBar Nye Monastery", "TaBar Nye, Thimphu, Bhutan",
-  10, "Camp", "Thadrana Telecom Tower Junction, Thimphu, Bhutan",
-  10, "Gyalpo Pelzang Peak", "Thadrana Telecom Tower point, Yusipang, Bhutan",
+  10, "TaBar Nye Monastery", "TaBar Nye, Thimphu, Bhutan", "walking",
+  10, "Camp", "Thadrana Telecom Tower Junction, Thimphu, Bhutan", "walking",
+  10, "Gyalpo Pelzang Peak", "Thadrana Telecom Tower point, Yusipang, Bhutan", "walking",
   11, "Hontsho", "Hontsho Picnic, Hungtsho, Bhutan",
-  11, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan"
+  #11, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan"
 )
 
 stops_geocoded <- stops_address |>
   geocode(address, method = "osm") |>
   mutate(
     lat = case_when(
+      place == "Tiger's Nest Road End" ~ ,
+      place == "Tango Monastery Roadend" ~ ,
       place == "Tshechu Festival" ~ 27.42960,
       place == "Kila Goenpa Nunnery" ~ 27.39064,
       place == "Khamsum Yulley Namgyal Chorten" ~ 27.62631,
@@ -155,7 +165,7 @@ stops_geocoded <- stops_address |>
       place == "TaBar Nye Monastery" ~ 27.51009,
       place == "Camp" ~ 27.50897,
       place == "Gyalpo Pelzang Peak" ~ 27.50863,
-      place == "Hontsho" ~ 27.50726,
+      #place == "Hontsho" ~ 27.50726,
       TRUE ~ lat
     ),
     long = case_when(
@@ -177,13 +187,13 @@ stops_geocoded <- stops_address |>
       place == "TaBar Nye Monastery" ~ 89.67089,
       place == "Camp" ~ 89.71630,
       place == "Gyalpo Pelzang Peak" ~ 89.71298,
-      place == "Hontsho" ~ 89.71271,
+      #place == "Hontsho" ~ 89.71271,
       TRUE ~ long
     )
   )
 write_csv(stops_geocoded, "data/stops_geocoded.csv")
 
-towbs <- tribble(
+towns <- tribble(
   ~day, ~town,        ~hotel,                      ~address,
   1,    "Paro",       "Tashi Namgay Resort",        "Tashi Namgay Resort, Paro, Bhutan",
   2,    "Paro",       "Tashi Namgay Resort",        "Tashi Namgay Resort, Paro, Bhutan",
@@ -438,14 +448,22 @@ library(dplyr)
 leaflet(routes_geocoded) %>%
   addProviderTiles("Stadia.StamenTerrainBackground") %>%
   addPolylines(
+    color     = ~colorFactor(viridisLite::mako(12, direction = -1), 
+                             domain = routes_geocoded$day)(day),
+    weight    = 3,
+    opacity   = 0.8,
+    dashArray =  "1, 5"
+    
+  ) |> 
+  #addPolylines(
     #color = ~colorFactor("RdYlBu", domain = routes_geocoded$day)(day),
-    color = ~colorFactor(viridisLite::mako(12, direction = -1), domain = routes_geocoded$day, alpha = 0.5) (day),
-    weight = 3,
-    opacity = 0.5,
+   # color = ~colorFactor(viridisLite::mako(12, direction = -1), domain = routes_geocoded$day, alpha = 0.5) (day),
+    #weight = 3,
+    #opacity = 0.5,
     #popup = ~paste("Day", day, "<br>", origin_place, "→", destination_place,
      #              "<br>Distance:", round(route_distance, 1), "km",
       #             "<br>Duration:", round(route_duration, 1), "mins")
-  ) %>%
+  #) %>%
   addAwesomeMarkers(
     data = all_stops_cat %>% filter(category != "other"),
     lat  = ~lat,
@@ -529,3 +547,217 @@ leaflet(routes_geocoded) %>%
        #                "color" = "black", "text-shadow" = "1px 1px 2px white")
     #)
  # )
+
+# Function that routes based on type
+get_route <- function(src_coords, dst_coords, route_type) {
+  osrmRoute(
+    src          = src_coords,
+    dst          = dst_coords,
+    osrm.profile = ifelse(route_type == "walking", "foot", "car"),
+    returnclass  = "sf"
+  )
+}
+
+# Apply to consecutive stop pairs
+routes_geocoded <- stops_geocoded %>%
+  mutate(
+    origin_place        = place,
+    destination_place   = lead(place),
+    origin_geometry     = geometry,
+    destination_geometry = lead(geometry),
+    route_type          = route_type  # carry through from stops data
+  ) %>%
+  filter(!is.na(destination_place)) %>%
+  rowwise() %>%
+  mutate(
+    route = list(get_route(
+      src_coords = c(long, lat),
+      dst_coords = c(lead(long), lead(lat)),
+      route_type = route_type
+    ))
+  )
+
+pal <- colorFactor(viridisLite::cividis(12, direction = -1), 
+                   domain = routes_geocoded$day)
+
+leaflet() %>%
+  addProviderTiles("Esri.WorldImagery") %>%
+  
+  # Driving routes — solid line
+  addPolylines(
+    data      = routes_geocoded %>% filter(route_type == "driving"),
+    color     = ~pal(day),
+    weight    = 4,
+    opacity   = 0.9,
+    dashArray = NULL,
+    popup     = ~paste("Day", day, "<br>", origin_place, "→", destination_place,
+                       "<br>Distance:", round(route_distance, 1), "km")
+  ) %>%
+  
+  # Walking routes — dashed line
+  addPolylines(
+    data      = routes_geocoded %>% filter(route_type == "walking"),
+    color     = ~pal(day),
+    weight    = 4,
+    opacity   = 0.9,
+    dashArray = "8, 6",
+    popup     = ~paste("Day", day, "<br>", origin_place, "→", destination_place,
+                       "<br>Distance:", round(route_distance, 1), "km")
+  ) %>%
+  
+  # Markers
+  addMarkers(
+    data  = all_stops_cat %>% filter(category %in% names(fa_icons)),
+    lat   = ~lat,
+    lng   = ~long,
+    icon  = ~fa_icons[category],
+    label = ~place,
+    popup = ~paste0("<b>", place, "</b><br>Day: ", day)
+  ) %>%
+  
+  # Labels
+  addLabelOnlyMarkers(
+    data  = all_stops_cat,
+    lat   = ~lat,
+    lng   = ~long,
+    label = ~place,
+    labelOptions = labelOptions(
+      noHide    = TRUE,
+      direction = "top",
+      textOnly  = TRUE,
+      style     = list("font-weight" = "bold", "font-size" = "11px",
+                       "color" = "white", "text-shadow" = "1px 1px 2px black")
+    )
+  ) %>%
+  
+  # Legend
+  addLegend(
+    position = "bottomright",
+    colors   = c("grey", "grey"),
+    labels   = c("Driving", "Walking"),
+    title    = "Route type",
+    opacity  = 0.8
+  )
+
+
+library(elevatr)
+library(sf)
+library(ggplot2)
+library(leaflet)
+
+# Extract all route coordinates with day info
+route_coords <- routes_geocoded %>%
+  st_drop_geometry() %>%
+  rowwise() %>%
+  mutate(coords = list(st_coordinates(route_geometry))) %>%
+  unnest(cols = coords) %>%
+  rename(long = X, lat = Y)
+
+# Get elevation for all points
+route_coords_sf <- route_coords %>%
+  st_as_sf(coords = c("long", "lat"), crs = 4326)
+
+elevation_data <- get_elev_point(
+  locations = route_coords_sf,
+  prj       = "EPSG:4326",
+  src       = "aws"          # Amazon Web Services terrain tiles
+)
+
+# Add cumulative distance for x-axis
+elevation_df <- elevation_data %>%
+  st_drop_geometry() %>%
+  mutate(
+    point_id = row_number(),
+    # Calculate cumulative distance in km
+    cum_dist = cumsum(c(0, sqrt(diff(route_coords$long)^2 + 
+                                  diff(route_coords$lat)^2) * 111))
+  )
+elev_plot <- ggplot(elevation_df, aes(x = cum_dist, y = elevation)) +
+  geom_ribbon(aes(ymin = min(elevation), ymax = elevation), 
+              fill = "steelblue", alpha = 0.3) +
+  geom_line(aes(color = factor(day)), linewidth = 0.8) +
+  scale_color_manual(
+    values = viridisLite::cividis(12, direction = -1),
+    name   = "Day"
+  ) +
+  scale_x_continuous(labels = function(x) paste0(round(x), " km")) +
+  scale_y_continuous(labels = function(y) paste0(round(y), " m")) +
+  labs(
+    x     = "Distance",
+    y     = "Elevation (m)",
+    title = "Elevation Profile"
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(
+    plot.background  = element_rect(fill = "white", color = "grey80"),
+    panel.grid.minor = element_blank(),
+    legend.position  = "none",
+    plot.title       = element_text(size = 10, face = "bold")
+  )
+
+library(htmlwidgets)
+library(htmltools)
+
+# Save plot as PNG for embedding
+tmp_plot <- tempfile(fileext = ".png")
+ggsave(tmp_plot, elev_plot, width = 5, height = 2, dpi = 150)
+
+# Encode as base64
+library(base64enc)
+plot_b64 <- base64encode(tmp_plot)
+plot_html <- paste0('<img src="data:image/png;base64,', plot_b64, 
+                    '" style="width:400px; height:160px;">')
+
+# Build map with embedded elevation plot
+map <- leaflet() %>%
+  addProviderTiles("Esri.WorldImagery") %>%
+  
+  # Driving routes
+  addPolylines(
+    data      = routes_geocoded %>% filter(route_type == "driving"),
+    color     = ~colorFactor(viridisLite::cividis(12, direction = -1),
+                             domain = day)(day),
+    weight    = 4,
+    opacity   = 0.9
+  ) %>%
+  
+  # Walking routes
+  addPolylines(
+    data      = routes_geocoded %>% filter(route_type == "walking"),
+    color     = ~colorFactor(viridisLite::cividis(12, direction = -1),
+                             domain = day)(day),
+    weight    = 4,
+    opacity   = 0.9,
+    dashArray = "8, 6"
+  ) %>%
+  
+  # Markers and labels
+  addMarkers(
+    data  = all_stops_cat %>% filter(category %in% names(fa_icons)),
+    lat   = ~lat,
+    lng   = ~long,
+    icon  = ~fa_icons[category],
+    label = ~place,
+    popup = ~paste0("<b>", place, "</b><br>Day: ", day)
+  ) %>%
+  addLabelOnlyMarkers(
+    data  = all_stops_cat,
+    lat   = ~lat,
+    lng   = ~long,
+    label = ~place,
+    labelOptions = labelOptions(
+      noHide    = TRUE,
+      direction = "top",
+      textOnly  = TRUE,
+      style     = list("font-weight" = "bold", "font-size" = "11px",
+                       "color" = "white", "text-shadow" = "1px 1px 2px black")
+    )
+  ) %>%
+  
+  # Embed elevation plot as a control in bottom left
+  addControl(
+    html     = plot_html,
+    position = "bottomleft"
+  )
+
+map
