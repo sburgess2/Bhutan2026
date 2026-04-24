@@ -34,8 +34,8 @@ dat <- read_exif(files) |>
   select(
     SourceFile, DateTimeOriginal,
     GPSLongitude, GPSLatitude,
-    GPSTimeStamp
-  ) |>
+    GPSTimeStamp 
+  ) |> 
   filter(!is.na(GPSLatitude))
 
 write_csv(dat, "data/exifdata.csv")
@@ -56,44 +56,7 @@ ggplot() +
   coord_sf(crs = st_crs("ESRI:102003"))
 # Code adapted from https://www.andrewheiss.com/blog/2023/06/01/geocoding-routing-openstreetmap-r/
 
-stops_address <- tribble(
-  ~day, ~place, ~address,
-  1, "Paro International Airport", "Paro International Airport, Paro, Bhutan",
-  2, "Tshechu Festival", "Rinpung courtyard, Paro, Bhutan",
-  2, "Rinpung Dzong", "Rinpung, Paro, Bhutan",
-  3, "Tiger's Nest", "Paro Taktsang, Paro, Bhutan",
-  4, "Kila Goenpa Nunnery", "Kila Goenpa, Paro, Bhutan",
-  4, "Chelela Pass", "Chele La Pass, Paro, Bhutan",
-  4, "White Temple", "Lhakhang Karpo, Haa, Bhutan",
-  5, "Tango Monastery", "Tango Monastery, Thimphu, Bhutan",
-  5, "Takin Preserve", "Motithang Takin Preserve, Thimphu, Bhutan",
-  6, "Thimphu", "Thimphu, Bhutan",
-  6, "Folk Heritage Museum", "Folk Heritage Museum Kawajangsa, Thimphu, Bhutan",
-  7, "Dochula Pass", "Dochula Pass, Thimphu, Bhutan",
-  7, "Teoprongchu", "Teoprongchu, Bhutan",
-  7, "Chimi Lhakhang (The Temple of Fertility)", "Chimi Lhakhang, Punakha, Bhutan",
-  8, "Khamsum Yulley Namgyal Chorten", "Khamsum Yulley Namgyal Chörten, Thimphu-Punakha Hwy, Bhutan",
-  8, "Mo Chhu River, Punakha", "Khamsum Yueli, Namgyal 13001, Bhutan",
-  8, "Sangchen Dorji Lhuendrup Nunnery", "Sangchhen Dorji Lhuendrup Nunnery, Punakha, Bhutan",
-  8, "Wangdue Ecolodge", "Wangdue Ecolodge, Damina Village, Ngashigaykha, Rubesa, Wangdue Phodrang, 14001, Bhutan",
-  9, "Wangdue Dzong", "Wangdue Phodrang Dzong, Wangdue Phodrang, Bhutan",
-  9, "Lawala Pass", "Lawala Pass, Dungdungneysa, Bhutan",
-  9, "Gangtey Monastery", "Gangtey Monastery, Phobjikha Valley, Bhutan",
-  9, "Phobjikha View Point", "Phobjikha View Point, Phobjikha Valley, Bhutan",
-  9, "Black Necked Crane Visitor Centre", "Black Necked Crane Visitor Centre, Phobjikha, Bhutan",
-  9, "Gangtey Tent Resort", "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan",
-  10, "Kumbu", "Kumbu, Bhutan",
-  10, "Kaychela Pass", "Kaychela Pass, Bhutan",
-  10, "Longtey", "Longtey, Bhutan",
-  10, "Gangtey Tent Resort", "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan",
-  11, "Himalayan Keys Forest Resort", "Himalayan Keys Forest Resort, Zhori Zur Lam, Thimphu, Bhutan",
-  11, "TaBar Nye Monastery", "TaBar Nye, Thimphu, Bhutan",
-  11, "Camp", "Thadrana Telecom Tower Junction, Thimphu, Bhutan",
-  11, "Gyalpo Pelzang Peak", "Thadrana Telecom Tower point, Yusipang, Bhutan",
-  12, "Hontsho", "Hontsho Picnic, Hungtsho, Bhutan",
-  12, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan",
-  13, "Paro International Airport", "Paro International Airport, Paro, Bhutan"
-)
+
 
 stops_address <- tribble(
   ~day, ~place, ~address, ~route_type,
@@ -103,10 +66,11 @@ stops_address <- tribble(
   #2, "Tiger's Nest Road End", "Road end, Paro Taktsang, Paro, Bhutan", "walking",
   2, "Tiger's Nest", "Paro Taktsang, Paro, Bhutan", "walking",
   2, "Taktsang trail", "Road end, Paro Taktsang, Paro, Bhutan", "driving",
-  3, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan", "driving",
+  #3, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan", "driving",
   3, "Kila Goenpa Nunnery", "Kila Goenpa, Paro, Bhutan", "walking",
   3, "Chelela Pass", "Chele La Pass, Paro, Bhutan", "driving",
   3, "White Temple", "Lhakhang Karpo, Haa, Bhutan", "driving",
+  3, "Sonam Zhidey Resort", "Sonam Zhidey Resort, Haa, Bhutan", "driving",
   #4, "Tango Roadend", "Tango Monastery Roadend, Thimphu, Bhutan", "walking",
   4, "Tango Monastery", "Tango Monastery, Thimphu, Bhutan", "walking",
   4, "Tango Roadend", "Tango Monastery Roadend, Thimphu, Bhutan", "driving",
@@ -136,19 +100,20 @@ stops_address <- tribble(
   10, "TaBar Nye Monastery", "TaBar Nye, Thimphu, Bhutan", "walking",
   10, "Camp", "Thadrana Telecom Tower Junction, Thimphu, Bhutan", "walking",
   10, "Gyalpo Pelzang Peak", "Thadrana Telecom Tower point, Yusipang, Bhutan", "walking",
-  11, "Hontsho", "Hontsho Picnic, Hungtsho, Bhutan", "driving"
+  11, "Hontsho", "Hontsho Picnic, Hungtsho, Bhutan", "driving")
   #11, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan"
-)
+
 
 stops_geocoded <- stops_address |>
   geocode(address, method = "osm") |>
   mutate(
     lat = case_when(
+      place == "Sonam Zhidey Resort" ~ 27.39062,
       place == "Rinpung Dzong" ~ 27.42960,
       place == "Taktsang trail" ~ 27.47139,
       place == "Tango Roadend" ~ 27.50910,
       place == "Tango Monastery" ~ 27.51028,
-      place == "Tshechu Festival" ~ 27.42960,
+      place == "Tshechu Festival" ~ 27.42908,
       place == "Kila Goenpa Nunnery" ~ 27.39064,
       place == "Khamsum Yulley Namgyal Chorten" ~ 27.62631,
       place == "Mo Chhu River, Punakha" ~ 27.62371,
@@ -170,11 +135,12 @@ stops_geocoded <- stops_address |>
       TRUE ~ lat
     ),
     long = case_when(
+      place == "Sonam Zhidey Resort" ~ 89.40642,
       place == "Rinpung Dzong" ~ 89.40768,
       place == "Taktsang trail" ~ 89.36045,
       place == "Tango Roadend" ~ 89.63318,
       place == "Tango Monastery" ~ 89.62429,
-      place == "Tshechu Festival" ~ 89.40768,
+      place == "Tshechu Festival" ~ 89.40546,
       place == "Kila Goenpa Nunnery" ~ 89.36146,
       place == "Khamsum Yulley Namgyal Chorten" ~ 89.80070,
       place == "Mo Chhu River, Punakha" ~ 89.80130,
@@ -725,7 +691,7 @@ leaflet() %>%
     label = ~town,
     labelOptions = labelOptions(
       noHide = TRUE,
-      direction = "top",
+      #direction = "top",
       textOnly = TRUE,
       style = list(
         "font-weight" = "bold",
