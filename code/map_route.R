@@ -96,7 +96,7 @@ stops_address <- tribble(
 )
 
 stops_address <- tribble(
-  ~day, ~place, ~address, ~route_type
+  ~day, ~place, ~address, ~route_type,
   1, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan", "driving",
   1, "Rinpung Dzong", "Rinpung, Paro, Bhutan", "walking",
   1, "Tshechu Festival", "Rinpung courtyard, Paro, Bhutan", "driving",
@@ -107,10 +107,9 @@ stops_address <- tribble(
   3, "Kila Goenpa Nunnery", "Kila Goenpa, Paro, Bhutan", "walking",
   3, "Chelela Pass", "Chele La Pass, Paro, Bhutan", "driving",
   3, "White Temple", "Lhakhang Karpo, Haa, Bhutan", "driving",
-  #3, "Chukha", "Chukha, Bhutan",
-  4, "Tango Monastery Roadend", "Tango Monastery, Thimphu, Bhutan", "walking",
-  4, "Tango Monastery", "Tango Monastery Roadend, Thimphu, Bhutan", "walking",
-  4, "Tango Monastery Roadend", "Tango Monastery, Thimphu, Bhutan", "driving",
+  4, "Tango Roadend", "Tango Monastery Roadend, Thimphu, Bhutan", "walking",
+  4, "Tango Monastery", "Tango Monastery, Thimphu, Bhutan", "walking",
+  4, "Tango Roadend", "Tango Monastery Roadend, Thimphu, Bhutan", "driving",
   4, "Takin Preserve", "Motithang Takin Preserve, Thimphu, Bhutan", "driving",
   5, "Norkhil Boutique Hotel",     "Norkhil Boutique Hotel, Thimphu, Bhutan", "driving",
   5, "Folk Heritage Museum", "Folk Heritage Museum Kawajangsa, Thimphu, Bhutan", "driving",
@@ -133,11 +132,11 @@ stops_address <- tribble(
   9, "Kaychela Pass", "Kaychela Pass, Bhutan","walking",
   9, "Longtey", "Longtey, Bhutan", "driving",
   9, "Gangtey Tent Resort", "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan", "driving",
-  10, "Himalayan Keys Forest Resort", "Himalayan Keys Forest Resort, Zhori Zur Lam, Thimphu, Bhutan",
+  10, "Himalayan Keys Forest Resort", "Himalayan Keys Forest Resort, Zhori Zur Lam, Thimphu, Bhutan", "driving",
   10, "TaBar Nye Monastery", "TaBar Nye, Thimphu, Bhutan", "walking",
   10, "Camp", "Thadrana Telecom Tower Junction, Thimphu, Bhutan", "walking",
   10, "Gyalpo Pelzang Peak", "Thadrana Telecom Tower point, Yusipang, Bhutan", "walking",
-  11, "Hontsho", "Hontsho Picnic, Hungtsho, Bhutan",
+  11, "Hontsho", "Hontsho Picnic, Hungtsho, Bhutan", "driving"
   #11, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan"
 )
 
@@ -145,8 +144,9 @@ stops_geocoded <- stops_address |>
   geocode(address, method = "osm") |>
   mutate(
     lat = case_when(
-      place == "Tiger's Nest Road End" ~ ,
-      place == "Tango Monastery Roadend" ~ ,
+      place == "Tiger's Nest Road End" ~ 27.47139,
+      place == "Tango Roadend" ~ 27.50910,
+      place == "Tango Monastery" ~ 27.51028,
       place == "Tshechu Festival" ~ 27.42960,
       place == "Kila Goenpa Nunnery" ~ 27.39064,
       place == "Khamsum Yulley Namgyal Chorten" ~ 27.62631,
@@ -165,10 +165,13 @@ stops_geocoded <- stops_address |>
       place == "TaBar Nye Monastery" ~ 27.51009,
       place == "Camp" ~ 27.50897,
       place == "Gyalpo Pelzang Peak" ~ 27.50863,
-      #place == "Hontsho" ~ 27.50726,
+      place == "Hontsho" ~ 27.50726,
       TRUE ~ lat
     ),
     long = case_when(
+      place == "Tiger's Nest Road End" ~ 89.36045,
+      place == "Tango Roadend" ~ 89.63318,
+      place == "Tango Monastery" ~ 89.62429,
       place == "Tshechu Festival" ~ 89.40768,
       place == "Kila Goenpa Nunnery" ~ 89.36146,
       place == "Khamsum Yulley Namgyal Chorten" ~ 89.80070,
@@ -187,7 +190,7 @@ stops_geocoded <- stops_address |>
       place == "TaBar Nye Monastery" ~ 89.67089,
       place == "Camp" ~ 89.71630,
       place == "Gyalpo Pelzang Peak" ~ 89.71298,
-      #place == "Hontsho" ~ 89.71271,
+      place == "Hontsho" ~ 89.71271,
       TRUE ~ long
     )
   )
@@ -242,12 +245,13 @@ routes_geocoded <- routes_geocoded_raw %>%
   st_set_geometry("route_geometry")
 
 leaflet(routes_geocoded) %>%
-  addProviderTiles("Esri.WorldImagery") %>%
+  #addProviderTiles("Esri.WorldImagery") %>%
+  addProviderTiles("CartoDB.Positron") |>
   addPolylines() %>%
   addCircleMarkers(
     lat = all_stops_unique$lat,
     lng = all_stops_unique$long,
-    # popup = paste(df$com,"-",format(df$time,"%H:%M:%S")),
+     #popup = paste(df$com,"-",format(df$time,"%H:%M:%S")),
     color = "red",
     stroke = FALSE,
     radius = 8,
@@ -293,7 +297,7 @@ leaflet(routes_geocoded) %>%
      # "Day", day, "<br>", origin_place, "→", destination_place,
       #"<br>Distance:", round(route_distance, 1), "km",
       #"<br>Duration:", round(route_duration, 1), "mins"
-    #)
+    
   ) %>%
   # Place markers with category icons
   addAwesomeMarkers(
@@ -301,14 +305,12 @@ leaflet(routes_geocoded) %>%
     lat = ~lat,
     lng = ~long,
     icon = ~ icons[category],
-    #label = ~place, # hover label = place name
+    label = ~place # hover label = place name
     #popup = ~ paste0(
      # "<b>", place, "</b><br>",
       #"Day: ", day, "<br>",
       #"Category: ", category
-    #)
-  ) 
-#%>%
+    ) %>%
   # Place name labels (permanent, not just on hover)
   addLabelOnlyMarkers(
     data = all_stops_cat,
@@ -548,61 +550,90 @@ leaflet(routes_geocoded) %>%
     #)
  # )
 
-# Function that routes based on type
+#####################################
+# Function that routes based on type#
+
 get_route <- function(src_coords, dst_coords, route_type) {
-  osrmRoute(
-    src          = src_coords,
-    dst          = dst_coords,
-    osrm.profile = ifelse(route_type == "walking", "foot", "car"),
-    returnclass  = "sf"
-  )
+  if (route_type == "walking") {
+    line <- sf::st_sfc(
+      sf::st_linestring(rbind(src_coords, dst_coords)),
+      crs = 4326
+    )
+    dist_km <- as.numeric(sf::st_length(line)) / 1000
+    
+    sf::st_sf(
+      src      = paste(src_coords, collapse = ","),
+      dst      = paste(dst_coords, collapse = ","),
+      duration = NA_real_,
+      distance = dist_km,
+      geometry = line
+    )
+  } else {
+    osrmRoute(
+      src          = src_coords,
+      dst          = dst_coords,
+      osrm.profile = "car"
+    )
+  }
 }
 
 # Apply to consecutive stop pairs
-routes_geocoded <- stops_geocoded %>%
+routes_geocoded <- stops_sf %>%
   mutate(
-    origin_place        = place,
-    destination_place   = lead(place),
-    origin_geometry     = geometry,
-    destination_geometry = lead(geometry),
-    route_type          = route_type  # carry through from stops data
+    origin_place      = place,
+    destination_place = lead(place),
+    src_long          = st_coordinates(geometry)[, 1],
+    src_lat           = st_coordinates(geometry)[, 2],
+    dest_long         = lead(st_coordinates(geometry)[, 1]),
+    dest_lat          = lead(st_coordinates(geometry)[, 2])
   ) %>%
   filter(!is.na(destination_place)) %>%
   rowwise() %>%
   mutate(
     route = list(get_route(
-      src_coords = c(long, lat),
-      dst_coords = c(lead(long), lead(lat)),
+      src_coords = c(src_long, src_lat),
+      dst_coords = c(dest_long, dest_lat),
       route_type = route_type
     ))
   )
+
+routes_sf <- routes_geocoded %>%
+  ungroup() %>%
+  sf::st_drop_geometry() %>%                 # drop POINT geometry from stops_sf
+  dplyr::select(-route) %>%                  # keep the attributes (day, route_type, etc.)
+  dplyr::bind_cols(
+    do.call(rbind, routes_geocoded$route) %>%  # stack all the per-segment sf frames
+      sf::st_as_sf() %>%
+      dplyr::select(geometry)                  # keep just the LINESTRING column
+  ) %>%
+  sf::st_as_sf()
 
 pal <- colorFactor(viridisLite::cividis(12, direction = -1), 
                    domain = routes_geocoded$day)
 
 leaflet() %>%
-  addProviderTiles("Esri.WorldImagery") %>%
+  addProviderTiles("Stadia.StamenTerrainBackground") %>%
   
   # Driving routes — solid line
   addPolylines(
-    data      = routes_geocoded %>% filter(route_type == "driving"),
+    data      = routes_sf %>% filter(route_type == "driving"),
     color     = ~pal(day),
     weight    = 4,
     opacity   = 0.9,
     dashArray = NULL,
-    popup     = ~paste("Day", day, "<br>", origin_place, "→", destination_place,
-                       "<br>Distance:", round(route_distance, 1), "km")
+    #popup     = ~paste("Day", day, "<br>", origin_place, "→", destination_place,
+     #                  "<br>Distance:", round(route_distance, 1), "km")
   ) %>%
   
   # Walking routes — dashed line
   addPolylines(
-    data      = routes_geocoded %>% filter(route_type == "walking"),
+    data      = routes_sf %>% filter(route_type == "walking"),
     color     = ~pal(day),
     weight    = 4,
     opacity   = 0.9,
     dashArray = "8, 6",
-    popup     = ~paste("Day", day, "<br>", origin_place, "→", destination_place,
-                       "<br>Distance:", round(route_distance, 1), "km")
+   # popup     = ~paste("Day", day, "<br>", origin_place, "→", destination_place,
+    #                   "<br>Distance:", round(route_distance, 1), "km")
   ) %>%
   
   # Markers
@@ -613,7 +644,7 @@ leaflet() %>%
     icon  = ~fa_icons[category],
     label = ~place,
     popup = ~paste0("<b>", place, "</b><br>Day: ", day)
-  ) %>%
+  ) |> 
   
   # Labels
   addLabelOnlyMarkers(
@@ -628,7 +659,7 @@ leaflet() %>%
       style     = list("font-weight" = "bold", "font-size" = "11px",
                        "color" = "white", "text-shadow" = "1px 1px 2px black")
     )
-  ) %>%
+  ) 
   
   # Legend
   addLegend(
@@ -761,3 +792,5 @@ map <- leaflet() %>%
   )
 
 map
+
+
