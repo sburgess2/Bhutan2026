@@ -100,14 +100,14 @@ stops_address <- tribble(
   1, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan", "driving",
   1, "Rinpung Dzong", "Rinpung, Paro, Bhutan", "walking",
   1, "Tshechu Festival", "Rinpung courtyard, Paro, Bhutan", "driving",
-  2, "Tiger's Nest Road End", "Road end, Paro Taktsang, Paro, Bhutan", "walking",
+  #2, "Tiger's Nest Road End", "Road end, Paro Taktsang, Paro, Bhutan", "walking",
   2, "Tiger's Nest", "Paro Taktsang, Paro, Bhutan", "walking",
-  2, "Tiger's Nest Road End", "Road end, Paro Taktsang, Paro, Bhutan", "driving",
+  2, "Taktsang trail", "Road end, Paro Taktsang, Paro, Bhutan", "driving",
   3, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan", "driving",
   3, "Kila Goenpa Nunnery", "Kila Goenpa, Paro, Bhutan", "walking",
   3, "Chelela Pass", "Chele La Pass, Paro, Bhutan", "driving",
   3, "White Temple", "Lhakhang Karpo, Haa, Bhutan", "driving",
-  4, "Tango Roadend", "Tango Monastery Roadend, Thimphu, Bhutan", "walking",
+  #4, "Tango Roadend", "Tango Monastery Roadend, Thimphu, Bhutan", "walking",
   4, "Tango Monastery", "Tango Monastery, Thimphu, Bhutan", "walking",
   4, "Tango Roadend", "Tango Monastery Roadend, Thimphu, Bhutan", "driving",
   4, "Takin Preserve", "Motithang Takin Preserve, Thimphu, Bhutan", "driving",
@@ -144,7 +144,8 @@ stops_geocoded <- stops_address |>
   geocode(address, method = "osm") |>
   mutate(
     lat = case_when(
-      place == "Tiger's Nest Road End" ~ 27.47139,
+      place == "Rinpung Dzong" ~ 27.42960,
+      place == "Taktsang trail" ~ 27.47139,
       place == "Tango Roadend" ~ 27.50910,
       place == "Tango Monastery" ~ 27.51028,
       place == "Tshechu Festival" ~ 27.42960,
@@ -169,7 +170,8 @@ stops_geocoded <- stops_address |>
       TRUE ~ lat
     ),
     long = case_when(
-      place == "Tiger's Nest Road End" ~ 89.36045,
+      place == "Rinpung Dzong" ~ 89.40768,
+      place == "Taktsang trail" ~ 89.36045,
       place == "Tango Roadend" ~ 89.63318,
       place == "Tango Monastery" ~ 89.62429,
       place == "Tshechu Festival" ~ 89.40768,
@@ -196,6 +198,16 @@ stops_geocoded <- stops_address |>
   )
 write_csv(stops_geocoded, "data/stops_geocoded.csv")
 
+
+
+stops_geocoded <- read_csv("data/stops_geocoded.csv")
+
+all_stops_unique <- stops_geocoded |>
+  distinct()
+
+stops_sf <- stops_geocoded |>
+  st_as_sf(coords = c("long", "lat"), crs = st_crs("EPSG:4326"))
+
 towns <- tribble(
   ~day, ~town,        ~hotel,                      ~address,
   1,    "Paro",       "Tashi Namgay Resort",        "Tashi Namgay Resort, Paro, Bhutan",
@@ -207,19 +219,52 @@ towns <- tribble(
   7,    "Wangdue",    "Wangdue Ecolodge",           "Wangdue Ecolodge, Damina Village, Ngashigaykha, Rubesa, Wangdue Phodrang, 14001, Bhutan",
   8,    "Gangtey",    "Gangtey Tent Resort",        "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan",
   9,    "Gangtey",    "Gangtey Tent Resort",        "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan",
-  10, "Thimphu", "Himalayan Keys Forest Resort", "Himalayan Keys Forest Resort, Zhori Zur Lam, Thimphu, Bhutan"
+  #10, "Thimphu", "Himalayan Keys Forest Resort", "Himalayan Keys Forest Resort, Zhori Zur Lam, Thimphu, Bhutan"
 )
 
-stops_geocoded <- read_csv("data/stops_geocoded.csv")
-
-all_stops_unique <- stops_geocoded |>
+towns_geocoded <- towns |>
+  #geocode(address, method = "osm") |>
+  mutate(
+    lat = case_when(hotel == "Tashi Namgay Resort" ~ 27.39000,
+                    hotel == "Sonam Zhidey Resort" ~ 27.39062,
+                    hotel == "Norkhil Boutique Hotel" ~ 27.47045,
+                    hotel == "Dumra Farm Resort" ~ 27.58620,
+                    hotel == "Wangdue Ecolodge" ~ 27.47045,
+                    hotel == "Gangtey Tent Resort" ~ 27.47103),
+                    #hotel == "Himalayan Keys Forest Resort" ~ 27.46988),
+    long = case_when(hotel == "Tashi Namgay Resort" ~ 89.40642,
+                     hotel == "Sonam Zhidey Resort" ~ 89.27509,
+                     hotel == "Norkhil Boutique Hotel" ~ 89.89029,
+                     hotel == "Dumra Farm Resort" ~ 89.84649,
+                     hotel == "Wangdue Ecolodge" ~ 89.89029,
+                     hotel == "Gangtey Tent Resort" ~ 90.15620))
+                     #hotel == "Himalayan Keys Forest Resort" ~ 89.62807)
+    
+                    
+all_towns_unique <- towns_geocoded |>
   distinct()
 
-stops_sf <- stops_geocoded |>
+towns_sf <- towns_geocoded |>
   st_as_sf(coords = c("long", "lat"), crs = st_crs("EPSG:4326"))
 
+towns_routes_raw <- towns_sf |>
+  select(-address) |>
+  rename(
+    origin_geometry = geometry,
+    origin_town = town
+  ) |>
+  mutate(
+    destination_geometry = lead(origin_geometry),
+    destination_place = lead(origin_place)
+  ) |>
+  filter(row_number() != n()) # remove last row
 
-
+towns_geocoded_raw <- towns_routes_raw %>%
+  rowwise() %>%
+  mutate(route = osrmRoute(
+    src = origin_geometry,
+    dst = destination_geometry
+  ))
 
 routes_raw <- stops_sf |>
   select(-address) |>
@@ -270,6 +315,7 @@ all_stops_cat <- all_stops_unique %>%
     grepl("View|Black|Preserve", place, ignore.case = TRUE) ~ "wildlife",
     #grepl("Resort|Ecolodge", place, ignore.case = TRUE) ~ "hotel",
     grepl("Heritage|Festival", place, ignore.case = TRUE) ~ "culture",
+    grepl("Pass", place, ignore.case = TRUE) ~ "pass",
     TRUE ~ "other"
   ))
 
@@ -608,6 +654,86 @@ routes_sf <- routes_geocoded %>%
   ) %>%
   sf::st_as_sf()
 
+
+icons_square <- awesomeIconList(
+ # airport  = makeAwesomeIcon(icon = "plane",    library = "fa", markerColor = "white", iconColor = "blue",      squareMarker = TRUE),
+  rafting  = makeAwesomeIcon(icon = "water",     library = "fa", markerColor = "white", iconColor = "black",     squareMarker = TRUE),
+  camping  = makeAwesomeIcon(icon = "tent",     library = "fa", markerColor = "white", iconColor = "black",    squareMarker = TRUE),
+  temple   = makeAwesomeIcon(icon = "vihara", library = "fa", markerColor = "white", iconColor = "red",       squareMarker = TRUE),
+  wildlife = makeAwesomeIcon(icon = "crow",     library = "fa", markerColor = "white", iconColor = "darkgreen", squareMarker = TRUE),
+  culture  = makeAwesomeIcon(icon = "camera",   library = "fa", markerColor = "white", iconColor = "purple",    squareMarker = TRUE)
+)
+library(leaflet)
+
+fa_svg_icon <- function(name, fill = "black", size = 16) {
+  url <- sprintf(
+    "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/svgs/solid/%s.svg",
+    name
+  )
+  svg <- paste(readLines(url, warn = FALSE), collapse = "")
+  # Inject the fill into the <svg> tag
+  svg_colored <- sub("<svg ", sprintf('<svg fill="%s" ', fill), svg)
+  data_uri <- paste0(
+    "data:image/svg+xml;utf8,",
+    utils::URLencode(svg_colored, reserved = TRUE)
+  )
+  makeIcon(iconUrl = data_uri, iconWidth = size, iconHeight = size)
+}
+
+icons_svg <- iconList(
+  rafting  = fa_svg_icon("water",  "black"),
+  camping  = fa_svg_icon("tent",   "black"),
+  temple   = fa_svg_icon("vihara", "black"),
+  wildlife = fa_svg_icon("crow",   "black"),
+  culture  = fa_svg_icon("camera", "black"),
+  pass = fa_svg_icon("mountain", "black")
+)
+
+#88A0D8FF, #485898FF, #5868B0FF, #A0A0A8FF, #A0C0F8FF, #B8B8C0FF, #707080FF, #384050FF, #000000FF, #D0D0D8FF, "#C0D8E8FF", #E8F0F0FF
+"#C0D8E8FF"
+
+###USE THIS CODE##
+#-----------------
+
+leaflet() %>%
+  addProviderTiles("Stadia.StamenTerrainBackground") %>%
+  addPolylines(
+    data      = routes_sf %>% filter(route_type == "driving"),
+    color     = "#C6C1F0FF",
+    weight    = 4,
+    opacity   = 0.8,
+    dashArray = NULL
+      ) %>%
+  addPolylines(
+    data      = routes_sf %>% filter(route_type == "walking"),
+    color     = "#F498B6FF",
+    weight    = 3,
+    opacity   = 0.8,
+    dashArray = "1, 5"
+  ) |> 
+  addMarkers(
+    data  = all_stops_cat %>% filter(category %in% names(icons_svg)),
+    lat   = ~lat, lng = ~long,
+    icon  = ~icons_svg[category],
+    label = ~place,
+    popup = ~paste0("<b>", place, "</b><br>Day: ", day, "<br>Category: ", category)
+  ) |> 
+  addLabelOnlyMarkers(
+    data = all_towns_unique,
+    lat = ~lat,
+    lng = ~long,
+    label = ~town,
+    labelOptions = labelOptions(
+      noHide = TRUE,
+      direction = "top",
+      textOnly = TRUE,
+      style = list(
+        "font-weight" = "bold",
+        "font-size"   = "11px",
+        "color"       = "white",
+        "text-shadow" = "1px 1px 2px black"
+      )
+    ))
 pal <- colorFactor(viridisLite::cividis(12, direction = -1), 
                    domain = routes_geocoded$day)
 
