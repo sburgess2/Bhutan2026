@@ -11,6 +11,8 @@ library(scales)
 library(ggspatial)
 library(leaflet)
 library(fontawesome)
+library(htmlwidgets)
+library(webshot2)
 
 bhutan_map <- ne_states(country = "Bhutan", returnclass = "sf")
 
@@ -60,6 +62,7 @@ ggplot() +
 
 stops_address <- tribble(
   ~day, ~place, ~address, ~route_type,
+  1, "Paro International Airport", "Paro International Airport, Paro, Bhutan", "driving",
   1, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan", "driving",
   1, "Rinpung Dzong", "Rinpung, Paro, Bhutan", "walking",
   1, "Tshechu Festival", "Rinpung courtyard, Paro, Bhutan", "driving",
@@ -113,20 +116,26 @@ stops_geocoded <- stops_address |>
       place == "Taktsang trail" ~ 27.47139,
       place == "Tango Roadend" ~ 27.50910,
       place == "Tango Monastery" ~ 27.51028,
-      place == "Tshechu Festival" ~ 27.42908,
+      #place == "Tshechu Festival" ~ 27.42908,
+      place == "Tshechu Festival" ~ 27.425904, 
       place == "Kila Goenpa Nunnery" ~ 27.39064,
-      place == "Khamsum Yulley Namgyal Chorten" ~ 27.62631,
-      place == "Mo Chhu River, Punakha" ~ 27.62371,
+      #place == "Khamsum Yulley Namgyal Chorten" ~ 27.62631, My photo GPS seems incorrect
+      place == "Khamsum Yulley Namgyal Chorten" ~ 27.63724, 
+      #place == "Mo Chhu River, Punakha" ~ 27.62371,
+      place == "Mo Chhu River, Punakha" ~ 27.63202, 
       place == "Sangchen Dorji Lhuendrup Nunnery" ~ 27.54797,
       place == "Wangdue Ecolodge" ~ 27.47045,
-      place == "Lawala Pass" ~ 27.51032,
+      #place == "Lawala Pass" ~ 27.51032,
+      place == "Lawala Pass" ~ 27.52489,
       place == "Gangtey Monastery" ~ 27.47145,
       place == "Phobjikha View Point" ~ 27.47071,
       place == "Black Necked Crane Visitor Centre" ~ 27.46819,
       place == "Gangtey Tent Resort" ~ 27.47103,
-      place == "Kumbu" ~ 27.50647,
+      #place == "Kumbu" ~ 27.50647,
+      place == "Kumbu" ~ 27.51193,
       place == "Kaychela Pass" ~ 27.50639,
-      place == "Longtey" ~ 27.5075,
+      #place == "Longtey" ~ 27.5075,
+      place == "Longtey" ~ 27.53060,
       place == "Himalayan Keys Forest Resort" ~ 27.46988,
       place == "TaBar Nye Monastery" ~ 27.51009,
       place == "Camp" ~ 27.50897,
@@ -136,24 +145,30 @@ stops_geocoded <- stops_address |>
     ),
     long = case_when(
       place == "Sonam Zhidey Resort" ~ 89.40642,
-      place == "Rinpung Dzong" ~ 89.40768,
+      #place == "Rinpung Dzong" ~ 89.40768,
       place == "Taktsang trail" ~ 89.36045,
       place == "Tango Roadend" ~ 89.63318,
       place == "Tango Monastery" ~ 89.62429,
-      place == "Tshechu Festival" ~ 89.40546,
+      #place == "Tshechu Festival" ~ 89.40546,
+      place == "Tshechu Festival" ~ 89.425298,
       place == "Kila Goenpa Nunnery" ~ 89.36146,
-      place == "Khamsum Yulley Namgyal Chorten" ~ 89.80070,
-      place == "Mo Chhu River, Punakha" ~ 89.80130,
+      #place == "Khamsum Yulley Namgyal Chorten" ~ 89.80070,
+      place == "Khamsum Yulley Namgyal Chorten" ~ 89.81667,
+      #place == "Mo Chhu River, Punakha" ~ 89.80130,
+      place == "Mo Chhu River, Punakha" ~ 89.81718,
       place == "Sangchen Dorji Lhuendrup Nunnery" ~ 89.84384,
       place == "Wangdue Ecolodge" ~ 89.89029,
-      place == "Lawala Pass" ~ 90.15212,
+      #place == "Lawala Pass" ~ 90.15212,
+      place == "Lawala Pass" ~ 90.17523,
       place == "Gangtey Monastery" ~ 90.15188,
       place == "Phobjikha View Point" ~ 90.20001,
       place == "Black Necked Crane Visitor Centre" ~ 90.15385,
       place == "Gangtey Tent Resort" ~ 90.15620,
-      place == "Kumbu" ~ 90.19599,
+      #place == "Kumbu" ~ 90.19599,
+      place == "Kumbu" ~ 90.18375,
       place == "Kaychela Pass" ~ 90.19788,
-      place == "Longtey" ~ 90.1964,
+      #place == "Longtey" ~ 90.1964,
+      place == "Longtey" ~ 90.2152,
       place == "Himalayan Keys Forest Resort" ~ 89.62807,
       place == "TaBar Nye Monastery" ~ 89.67089,
       place == "Camp" ~ 89.71630,
@@ -193,14 +208,14 @@ towns_geocoded <- towns |>
   mutate(
     lat = case_when(hotel == "Tashi Namgay Resort" ~ 27.39000,
                     hotel == "Sonam Zhidey Resort" ~ 27.39062,
-                    hotel == "Norkhil Boutique Hotel" ~ 27.47045,
+                    hotel == "Norkhil Boutique Hotel" ~ 27.46915,
                     hotel == "Dumra Farm Resort" ~ 27.58620,
                     hotel == "Wangdue Ecolodge" ~ 27.47045,
                     hotel == "Gangtey Tent Resort" ~ 27.47103),
                     #hotel == "Himalayan Keys Forest Resort" ~ 27.46988),
     long = case_when(hotel == "Tashi Namgay Resort" ~ 89.40642,
                      hotel == "Sonam Zhidey Resort" ~ 89.27509,
-                     hotel == "Norkhil Boutique Hotel" ~ 89.89029,
+                     hotel == "Norkhil Boutique Hotel" ~ 89.62667,
                      hotel == "Dumra Farm Resort" ~ 89.84649,
                      hotel == "Wangdue Ecolodge" ~ 89.89029,
                      hotel == "Gangtey Tent Resort" ~ 90.15620))
@@ -273,11 +288,11 @@ leaflet(routes_geocoded) %>%
 # 1. Assign categories to your stops
 all_stops_cat <- all_stops_unique %>%
   mutate(category = case_when(
-    #grepl("Airport", place, ignore.case = TRUE) ~ "airport",
+    grepl("Airport", place, ignore.case = TRUE) ~ "airport",
     #grepl("Nest|Hike|Trek|Chelela", place, ignore.case = TRUE) ~ "hiking",
     grepl("Camp", place, ignore.case = TRUE) ~ "camping",
     grepl("River", place, ignore.case = TRUE) ~ "rafting",
-    grepl("Dzong|Temple|Monastery|Nunnery|Goenpa|Nest", place, ignore.case = TRUE) ~ "temple",
+    grepl("Dzong|Temple|Monastery|Nunnery|Goenpa|Nest|Chorten", place, ignore.case = TRUE) ~ "temple",
     grepl("View|Black|Preserve", place, ignore.case = TRUE) ~ "wildlife",
     #grepl("Resort|Ecolodge", place, ignore.case = TRUE) ~ "hotel",
     grepl("Heritage|Festival", place, ignore.case = TRUE) ~ "culture",
@@ -350,14 +365,14 @@ leaflet(routes_geocoded) %>%
     title    = "Place type",
     opacity  = 0.8
   )
-icons_square <- awesomeIconList(
-  airport  = makeAwesomeIcon(icon = "plane",    library = "fa", markerColor = "white", iconColor = "blue",      squareMarker = TRUE),
-  rafting  = makeAwesomeIcon(icon = "ship",     library = "fa", markerColor = "white", iconColor = "green",     squareMarker = TRUE),
-  camping  = makeAwesomeIcon(icon = "fire",     library = "fa", markerColor = "white", iconColor = "orange",    squareMarker = TRUE),
-  temple   = makeAwesomeIcon(icon = "building", library = "fa", markerColor = "white", iconColor = "red",       squareMarker = TRUE),
-  wildlife = makeAwesomeIcon(icon = "leaf",     library = "fa", markerColor = "white", iconColor = "darkgreen", squareMarker = TRUE),
-  culture  = makeAwesomeIcon(icon = "camera",   library = "fa", markerColor = "white", iconColor = "purple",    squareMarker = TRUE)
-)
+#icons_square <- awesomeIconList(
+ # airport  = makeAwesomeIcon(icon = "plane",    library = "fa", markerColor = "white", iconColor = "blue",      squareMarker = TRUE),
+  #rafting  = makeAwesomeIcon(icon = "ship",     library = "fa", markerColor = "white", iconColor = "green",     squareMarker = TRUE),
+  #camping  = makeAwesomeIcon(icon = "fire",     library = "fa", markerColor = "white", iconColor = "orange",    squareMarker = TRUE),
+  #temple   = makeAwesomeIcon(icon = "building", library = "fa", markerColor = "white", iconColor = "red",       squareMarker = TRUE),
+  #wildlife = makeAwesomeIcon(icon = "leaf",     library = "fa", markerColor = "white", iconColor = "darkgreen", squareMarker = TRUE),
+  #culture  = makeAwesomeIcon(icon = "camera",   library = "fa", markerColor = "white", iconColor = "purple",    squareMarker = TRUE)
+#)
 
 leaflet(routes_geocoded) %>%
   addProviderTiles("CartoDB.Positron") %>%
@@ -621,15 +636,14 @@ routes_sf <- routes_geocoded %>%
   sf::st_as_sf()
 
 
-icons_square <- awesomeIconList(
+#icons_square <- awesomeIconList(
  # airport  = makeAwesomeIcon(icon = "plane",    library = "fa", markerColor = "white", iconColor = "blue",      squareMarker = TRUE),
-  rafting  = makeAwesomeIcon(icon = "water",     library = "fa", markerColor = "white", iconColor = "black",     squareMarker = TRUE),
-  camping  = makeAwesomeIcon(icon = "tent",     library = "fa", markerColor = "white", iconColor = "black",    squareMarker = TRUE),
-  temple   = makeAwesomeIcon(icon = "vihara", library = "fa", markerColor = "white", iconColor = "red",       squareMarker = TRUE),
-  wildlife = makeAwesomeIcon(icon = "crow",     library = "fa", markerColor = "white", iconColor = "darkgreen", squareMarker = TRUE),
-  culture  = makeAwesomeIcon(icon = "camera",   library = "fa", markerColor = "white", iconColor = "purple",    squareMarker = TRUE)
-)
-library(leaflet)
+ # rafting  = makeAwesomeIcon(icon = "water",     library = "fa", markerColor = "white", iconColor = "black",     squareMarker = TRUE),
+  #camping  = makeAwesomeIcon(icon = "tent",     library = "fa", markerColor = "white", iconColor = "black",    squareMarker = TRUE),
+  #temple   = makeAwesomeIcon(icon = "vihara", library = "fa", markerColor = "white", iconColor = "red",       squareMarker = TRUE),
+  #wildlife = makeAwesomeIcon(icon = "crow",     library = "fa", markerColor = "white", iconColor = "darkgreen", squareMarker = TRUE),
+  #culture  = makeAwesomeIcon(icon = "camera",   library = "fa", markerColor = "white", iconColor = "purple",    squareMarker = TRUE))
+#library(leaflet)
 
 fa_svg_icon <- function(name, fill = "black", size = 16) {
   url <- sprintf(
@@ -652,7 +666,9 @@ icons_svg <- iconList(
   temple   = fa_svg_icon("vihara", "black"),
   wildlife = fa_svg_icon("crow",   "black"),
   culture  = fa_svg_icon("camera", "black"),
-  pass = fa_svg_icon("mountain", "black")
+  pass = fa_svg_icon("mountain", "black"),
+  airport = fa_svg_icon("plane", "black")
+  
 )
 
 #88A0D8FF, #485898FF, #5868B0FF, #A0A0A8FF, #A0C0F8FF, #B8B8C0FF, #707080FF, #384050FF, #000000FF, #D0D0D8FF, "#C0D8E8FF", #E8F0F0FF
@@ -661,7 +677,7 @@ icons_svg <- iconList(
 ###USE THIS CODE##
 #-----------------
 
-leaflet() %>%
+bhutan_map <- leaflet() %>%
   addProviderTiles("Stadia.StamenTerrainBackground") %>%
   addPolylines(
     data      = routes_sf %>% filter(route_type == "driving"),
@@ -696,12 +712,18 @@ leaflet() %>%
       style = list(
         "font-weight" = "bold",
         "font-size"   = "11px",
-        "color"       = "white",
-        "text-shadow" = "1px 1px 2px black"
+        "color"       = "white"
+        #"text-shadow" = "1px 1px 2px black"
       )
-    ))
-pal <- colorFactor(viridisLite::cividis(12, direction = -1), 
-                   domain = routes_geocoded$day)
+    )) |> 
+  addScaleBar(position = "bottomleft", options = scaleBarOptions(maxWidth = 100, 
+                                                                 updateWhenIdle = TRUE,
+                                                                 imperial = FALSE))
+mapview::mapshot(bhutan_map, file = "map.png")
+saveWidget(bhutan_map, "output/bhutan_map.html", selfcontained = TRUE)
+webshot("output/bhutan_map.html", file = "output/bhutan_map.png", vwidth = 900, vheight = 900)
+#pal <- colorFactor(viridisLite::cividis(12, direction = -1), 
+ #                  domain = routes_geocoded$day)
 
 leaflet() %>%
   addProviderTiles("Stadia.StamenTerrainBackground") %>%
