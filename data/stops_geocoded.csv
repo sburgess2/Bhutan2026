@@ -1,0 +1,42 @@
+travel_day,place,address,route_type,lat,long
+0,Paro International Airport,"Paro International Airport, Paro, Bhutan",driving,27.4031845,89.4234165
+1,Tashi Namgay Resort,"Tashi Namgay Resort, Paro, Bhutan",driving,27.3999294,89.4222628
+1,Rinpung Dzong,"Rinpung, Paro, Bhutan",walking,27.4296,89.4226661
+1,Tshechu Festival,"Rinpung courtyard, Paro, Bhutan",driving,27.425904,89.425298
+2,Tiger's Nest (3120 m),"Paro Taktsang, Paro, Bhutan",walking,27.4919324,89.3634449
+2,Taktsang trail,"Road end, Paro Taktsang, Paro, Bhutan",driving,27.4818,89.360695
+3,Kila Goenpa Nunnery,"Kila Goenpa, Paro, Bhutan",walking,27.39064,89.36146
+3,Chelela Pass (3988 m),"Chele La Pass, Paro, Bhutan",driving,27.3698767,89.3466731
+3,White Temple,"Lhakhang Karpo, Haa, Bhutan",driving,27.3625121,89.2955519
+3,Sonam Zhidey Resort,"Sonam Zhidey Resort, Haa, Bhutan",driving,27.39062,89.40642
+4,ChuZom-Haa Highway1,"ChuZom-Haa Highway, Bhutan",driving,27.31161,89.31698
+4,ChuZom-Haa Highway2,"ChuZom-Haa Highway, Bhutan",driving,27.19582,89.49546
+4,Tango Monastery,"Tango Monastery, Thimphu, Bhutan",walking,27.51028,89.62429
+4,Tango Roadend,"Tango Monastery Roadend, Thimphu, Bhutan",driving,27.5091,89.63318
+4,Takin Preserve,"Motithang Takin Preserve, Thimphu, Bhutan",driving,27.4816382,89.612029
+5,Norkhil Boutique Hotel,"Norkhil Boutique Hotel, Thimphu, Bhutan",driving,27.4698386,89.6356666
+5,Folk Heritage Museum,"Folk Heritage Museum Kawajangsa, Thimphu, Bhutan",driving,27.4825495,89.6320826
+6,Dochula Pass (3100 m),"Dochula Pass, Thimphu, Bhutan",driving,27.4900827,89.7490068
+6,Teoprongchu,"Teoprongchu, Bhutan",walking,27.5241749,89.8759197
+6,Chimi Lhakhang (The Temple of Fertility),"Chimi Lhakhang, Punakha, Bhutan",walking,27.5268734,89.8781897
+6,Teoprongchu,"Teoprongchu, Bhutan",driving,27.5241749,89.8759197
+7,"Mo Chhu River, Punakha","Khamsum Yueli, Namgyal 13001, Bhutan",walking,27.63202,89.81718
+7,Khamsum Yulley Namgyal Chorten,"Khamsum Yulley Namgyal Chörten, Thimphu-Punakha Hwy, Bhutan",walking,27.63724,89.81667
+7,"Mo Chhu River, Punakha","Khamsum Yueli, Namgyal 13001, Bhutan",driving,27.63202,89.81718
+7,Sangchen Dorji Lhuendrup Nunnery,"Sangchhen Dorji Lhuendrup Nunnery, Punakha, Bhutan",driving,27.54797,89.84384
+7,Wangdue Ecolodge,"Wangdue Ecolodge, Damina Village, Ngashigaykha, Rubesa, Wangdue Phodrang, 14001, Bhutan",driving,27.47045,89.89029
+8,Wangdue Dzong,"Wangdue Phodrang Dzong, Wangdue Phodrang, Bhutan",driving,27.4749573,89.8973688
+8,Lawala Pass (3250 m),"Lawala Pass, Dungdungneysa, Bhutan",driving,27.52489,90.17523
+8,Gangtey Monastery,"Gangtey Monastery, Phobjikha Valley, Bhutan",walking,27.47145,90.15188
+8,Phobjikha View Point,"Phobjikha View Point, Phobjikha Valley, Bhutan",driving,27.47071,90.20001
+8,Black Necked Crane Visitor Centre,"Black Necked Crane Visitor Centre, Phobjikha, Bhutan",driving,27.46819,90.15385
+8,Gangtey Tent Resort,"Gangtey Tent Resort, Gangtey Phobjikha, Bhutan",driving,27.47103,90.1562
+9,Kumbu,"Kumbu, Bhutan",walking,27.51193,90.18375
+9,Kaychela Pass (3600 m),"Kaychela Pass, Bhutan",walking,27.50639,90.19788
+9,Longtey,"Longtey, Bhutan",driving,27.5306,90.2152
+9,Gangtey Tent Resort,"Gangtey Tent Resort, Gangtey Phobjikha, Bhutan",driving,27.47103,90.1562
+10,Himalayan Keys Forest Resort,"Himalayan Keys Forest Resort, Zhori Zur Lam, Thimphu, Bhutan",driving,27.46988,89.62807
+10,TaBar Nye Monastery,"TaBar Nye, Thimphu, Bhutan",walking,27.51009,89.67089
+10,Camp (3700 m),"Thadrana Telecom Tower Junction, Thimphu, Bhutan",walking,27.50897,89.7163
+10,Gyalpo Pelzang Peak (4200 m),"Thadrana Telecom Tower point, Yusipang, Bhutan",walking,27.50863,89.71298
+11,Hontsho,"Hontsho Picnic, Hungtsho, Bhutan",driving,27.50726,89.71271
