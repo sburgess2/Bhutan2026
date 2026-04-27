@@ -3,4 +3,8 @@ project:
   output-dir: docs
 
 website: 
-  title: "Travelling around Bhutan"
+  title: "Two weeks in Bhutan"
+  
+format:
+  html:
+    css: styles.css

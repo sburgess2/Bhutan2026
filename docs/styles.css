@@ -1,0 +1,397 @@
+/* ===========================
+   Greenhood Data Portfolio Styles
+   =========================== */
+
+/* ----- Import Fonts ----- */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ----- Colour Palette ----- */
+:root {
+  --lime-green: #C4D600;      /* Primary brand green */
+  --forest-green: #4A5D23;    /* Dark green */
+  --charcoal: #1E2019;        /* Near black background */
+  --white: #FFFFFF;           /* White text */
+  --light-grey: #D9D9D9;      /* Light grey */
+  --medium-grey: #8A8A8A;     /* Medium grey */
+  --heading-gold: #ddd69e;    /* Gold for headings */
+}
+
+/* ----- Base ----- */
+body {
+  background-color: var(--charcoal);
+  color: var(--white);
+  font-family: "Poppins", sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+/* ----- Headings ----- */
+h1, h2, h3 {
+  color: var(--heading-gold);
+  font-family: "Baloo 2", cursive;
+  font-weight: 700;
+  margin-top: 1.2em;
+}
+
+h4, h5, h6 {
+  color: var(--heading-gold);
+  font-family: "Baloo 2", cursive;
+  font-weight: 600;
+  margin-top: 1.2em;
+}
+
+/* Subtitles and secondary text */
+.subtitle, .description {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  color: var(--light-grey);
+}
+
+/* ----- Links ----- */
+a {
+  color: var(--lime-green);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+a:hover {
+  color: var(--white);
+  text-decoration: underline;
+}
+
+/* ----- Sidebar ----- */
+.sidebar {
+  background-color: var(--charcoal);
+  color: var(--white);
+  border-right: 2px solid var(--forest-green);
+  padding-top: 1em;
+}
+
+.sidebar a {
+  display: block;
+  color: var(--light-grey);
+  padding: 0.5em 1em;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+}
+
+.sidebar a:hover {
+  background-color: var(--lime-green);
+  color: var(--charcoal);
+  text-decoration: none;
+}
+
+.sidebar a.active {
+  border-left: 4px solid var(--lime-green);
+  background-color: rgba(196, 214, 0, 0.15);
+  color: var(--lime-green);
+}
+
+/* ----- Navbar ----- */
+.navbar {
+  background-color: var(--charcoal);
+  color: var(--white);
+  padding: 0.6em 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 4px solid var(--lime-green);
+}
+
+.navbar a {
+  color: var(--white);
+  margin-left: 1em;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+}
+
+.navbar a:hover {
+  color: var(--lime-green);
+}
+
+/* ----- Footer ----- */
+.page-footer, .footer {
+  background-color: var(--charcoal);
+  color: var(--light-grey);
+  text-align: center;
+  padding: 1em;
+  font-size: 0.9em;
+  font-family: "Poppins", sans-serif;
+  border-top: 4px solid var(--lime-green);
+}
+
+.page-footer a, .footer a {
+  color: var(--lime-green);
+  text-decoration: none;
+}
+
+.page-footer a:hover, .footer a:hover {
+  color: var(--white);
+  text-decoration: underline;
+}
+
+/* ----- Buttons ----- */
+button, .btn, input[type="submit"] {
+  background-color: transparent;
+  color: var(--white);
+  border: 2px solid var(--lime-green);
+  padding: 0.5em 1.5em;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover, .btn:hover, input[type="submit"]:hover {
+  background-color: var(--lime-green);
+  color: var(--charcoal);
+}
+
+/* ----- Content Boxes / Service Cards ----- */
+.content-box, .service-card {
+  background-color: rgba(196, 214, 0, 0.1);
+  border: 2px solid var(--lime-green);
+  padding: 2em;
+  border-radius: 12px;
+  margin: 1em 0;
+  box-shadow: 0 4px 12px rgba(196, 214, 0, 0.2);
+  text-align: center;
+}
+
+.content-box h3, .service-card h3 {
+  font-family: "Baloo 2", cursive;
+  color: var(--heading-gold);
+  margin-bottom: 0.5em;
+}
+
+.content-box p, .service-card p {
+  font-family: "Poppins", sans-serif;
+  color: var(--light-grey);
+  line-height: 1.8;
+}
+
+/* ----- Blockquotes ----- */
+blockquote {
+  border-left: 4px solid var(--lime-green);
+  background: rgba(196, 214, 0, 0.1);
+  color: var(--white);
+  padding: 1em;
+  margin: 1.5em 0;
+  font-style: italic;
+  font-family: "Poppins", sans-serif;
+  border-radius: 4px;
+}
+
+/* ----- Tables ----- */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  background-color: var(--charcoal);
+}
+
+th {
+  background-color: var(--lime-green);
+  color: var(--charcoal);
+  padding: 0.8em;
+  font-family: "Baloo 2", cursive;
+  font-weight: 700;
+}
+
+td {
+  border: 1px solid var(--forest-green);
+  padding: 0.5em;
+  color: var(--white);
+  font-family: "Poppins", sans-serif;
+}
+
+/* ----- Code Blocks and Outputs ----- */
+/* Inline code */
+code {
+  background-color: #FFFFFF !important;
+  color: var(--charcoal) !important;
+  font-family: "Courier New", monospace;
+  border-radius: 4px;
+  padding: 0.2em 0.4em;
+  border: 1px solid var(--light-grey);
+}
+
+/* Code blocks */
+pre {
+  background-color: #FFFFFF !important;
+  color: var(--charcoal) !important;
+  font-family: "Courier New", monospace;
+  border-radius: 4px;
+  padding: 1em !important;
+  border: 1px solid var(--light-grey);
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+pre code {
+  background-color: transparent !important;
+  border: none;
+  padding: 0;
+}
+
+/* Code output blocks (R Markdown/Quarto outputs) */
+.cell-output,
+.cell-output-stdout,
+.cell-output-display,
+pre.r-output,
+.sourceCode,
+div.sourceCode {
+  background-color: #FFFFFF !important;
+}
+
+/* Specifically target code chunks */
+div.sourceCode pre,
+pre.sourceCode,
+pre.r,
+pre.python,
+pre.sql {
+  background-color: #FFFFFF !important;
+  color: var(--charcoal) !important;
+}
+
+/* Output text */
+.output,
+.r-output,
+pre.output {
+  background-color: #FFFFFF !important;
+  color: var(--charcoal) !important;
+  border: 1px solid var(--light-grey);
+  padding: 1em;
+  border-radius: 4px;
+}
+
+/* ----- Icon Circles (like in the design) ----- */
+.icon-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: var(--lime-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1em;
+}
+
+.icon-circle-outline {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 3px solid var(--lime-green);
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1em;
+}
+/* ----- References Section ----- */
+/* Target references by common class names or IDs */
+#references,
+.references,
+div#refs,
+.references-section,
+section.references {
+  background-color: var(--charcoal);
+  padding: 2em;
+  border-radius: 8px;
+  margin: 2em 0;
+}
+
+/* References heading */
+#references h1,
+#references h2,
+.references h1,
+.references h2,
+div#refs h1,
+div#refs h2 {
+  color: var(--heading-gold);
+  font-family: "Baloo 2", cursive;
+  text-align: left;
+  margin-bottom: 1em;
+}
+
+/* Individual reference entries */
+#references div,
+.references div,
+div#refs div,
+.csl-entry,
+.reference {
+  text-align: left !important;
+  justify-content: flex-start !important;
+  margin-bottom: 1em;
+  padding-left: 0 !important;
+  color: var(--white);
+  font-family: "Poppins", sans-serif;
+  line-height: 1.6;
+}
+
+/* Reference links */
+#references a,
+.references a,
+div#refs a,
+.csl-entry a {
+  color: var(--lime-green);
+  text-decoration: none;
+}
+
+#references a:hover,
+.references a:hover,
+div#refs a:hover,
+.csl-entry a:hover {
+  color: var(--white);
+  text-decoration: underline;
+}
+
+/* Remove any centering from bibliography */
+.csl-bib-body {
+  text-align: left !important;
+}
+
+/* Italic text in references (journal names, etc.) */
+#references em,
+#references i,
+.references em,
+.references i,
+div#refs em,
+div#refs i,
+.csl-entry em,
+.csl-entry i {
+  color: var(--lime-green);
+  font-style: italic;
+}
+
+/* Target Quarto appendix elements specifically */
+.quarto-appendix-contents,
+#quarto-bibliography,
+.quarto-appendix-heading,
+section[role="doc-bibliography"] {
+  background-color: var(--charcoal) !important;
+  padding: 2em !important;
+  margin: 0 !important;
+}
+
+/* Remove any default spacing above/below references heading */
+h2.quarto-appendix-heading,
+h2#references.anchored {
+  background-color: var(--charcoal) !important;
+  margin-top: 0 !important;
+  margin-bottom: 1em !important;
+  padding-top: 0 !important;
+}
+
+/* Ensure the section containing everything has dark background */
+section.quarto-appendix-contents {
+  background-color: var(--charcoal) !important;
+}
+
+/* Target the specific bibliography section */
+#quarto-bibliography {
+  background-color: var(--charcoal) !important;
+}

@@ -1,8 +1,13 @@
 ---
-format: html
+format: 
+  html:
+    page-layout: full
 editor: visual
 ---
 
+## Two weeks in Bhutan
+
+In early April 2026 I was very lucky to spend two weeks on holiday in Bhutan. This is a very special country, with a rich culture and beautiful forests for hiking. Below are two maps showing our travel route through Bhutan. The first map gives you an idea of the landscape's topography and on the second map you can zoom in to see each town. Hover over the icons to see which places we visited. We had so many wonderful experiences, but the one that stands out the most was our overnight hike and camping trip. We camped in the hills above Thimphu at an altitude of about 3,700 m, in the snow!
 
 ```{r}
 #| echo: false
@@ -34,7 +39,7 @@ library(htmltools)
 stops_address <- tribble(
   ~travel_day, ~place, ~address, ~route_type,
   0, "Paro International Airport", "Paro International Airport, Paro, Bhutan", "driving",
-  1, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan", "driving",
+  #1, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan", "driving",
   1, "Rinpung Dzong", "Rinpung, Paro, Bhutan", "walking",
   1, "Tshechu Festival", "Rinpung courtyard, Paro, Bhutan", "driving",
   #2, "Tiger's Nest Road End", "Road end, Paro Taktsang, Paro, Bhutan", "walking",
@@ -51,7 +56,7 @@ stops_address <- tribble(
   4, "Tango Monastery", "Tango Monastery, Thimphu, Bhutan", "walking",
   4, "Tango Roadend", "Tango Monastery Roadend, Thimphu, Bhutan", "driving",
   4, "Takin Preserve", "Motithang Takin Preserve, Thimphu, Bhutan", "driving",
-  5, "Norkhil Boutique Hotel",     "Norkhil Boutique Hotel, Thimphu, Bhutan", "driving",
+  #5, "Norkhil Boutique Hotel",     "Norkhil Boutique Hotel, Thimphu, Bhutan", "driving",
   5, "Folk Heritage Museum", "Folk Heritage Museum Kawajangsa, Thimphu, Bhutan", "driving",
   6, "Dochula Pass (3100 m)", "Dochula Pass, Thimphu, Bhutan", "driving",
   6, "Teoprongchu", "Teoprongchu, Bhutan", "walking",
@@ -61,18 +66,19 @@ stops_address <- tribble(
   7, "Khamsum Yulley Namgyal Chorten", "Khamsum Yulley Namgyal Chörten, Thimphu-Punakha Hwy, Bhutan", "walking",
   7, "Mo Chhu River, Punakha", "Khamsum Yueli, Namgyal 13001, Bhutan", "driving",
   7, "Sangchen Dorji Lhuendrup Nunnery", "Sangchhen Dorji Lhuendrup Nunnery, Punakha, Bhutan", "driving",
-  7, "Wangdue Ecolodge", "Wangdue Ecolodge, Damina Village, Ngashigaykha, Rubesa, Wangdue Phodrang, 14001, Bhutan", "driving",
+  #7, "Wangdue Ecolodge", "Wangdue Ecolodge, Damina Village, Ngashigaykha, Rubesa, Wangdue Phodrang, 14001, Bhutan", "driving",
   8, "Wangdue Dzong", "Wangdue Phodrang Dzong, Wangdue Phodrang, Bhutan", "driving",
   8, "Lawala Pass (3250 m)", "Lawala Pass, Dungdungneysa, Bhutan", "driving",
   8, "Gangtey Monastery", "Gangtey Monastery, Phobjikha Valley, Bhutan", "walking",
+  8, "Gantye Nature Trail", "Gantye Nature TrailPhobjikha Valley, Bhutan", "walking",
   8, "Phobjikha View Point", "Phobjikha View Point, Phobjikha Valley, Bhutan", "driving",
   8, "Black Necked Crane Visitor Centre", "Black Necked Crane Visitor Centre, Phobjikha, Bhutan", "driving",
-  8, "Gangtey Tent Resort", "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan", "driving",
+  #8, "Gangtey Tent Resort", "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan", "driving",
   9, "Kumbu", "Kumbu, Bhutan", "walking",
   9, "Kaychela Pass (3600 m)", "Kaychela Pass, Bhutan","walking",
   9, "Longtey", "Longtey, Bhutan", "driving",
-  9, "Gangtey Tent Resort", "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan", "driving",
-  10, "Himalayan Keys Forest Resort", "Himalayan Keys Forest Resort, Zhori Zur Lam, Thimphu, Bhutan", "driving",
+  #9, "Gangtey Tent Resort", "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan", "driving",
+  #10, "Himalayan Keys Forest Resort", "Himalayan Keys Forest Resort, Zhori Zur Lam, Thimphu, Bhutan", "driving",
   10, "TaBar Nye Monastery", "TaBar Nye, Thimphu, Bhutan", "walking",
   10, "Camp (3700 m)", "Thadrana Telecom Tower Junction, Thimphu, Bhutan", "walking",
   10, "Gyalpo Pelzang Peak (4200 m)", "Thadrana Telecom Tower point, Yusipang, Bhutan", "walking",
@@ -100,19 +106,22 @@ stops_geocoded <- stops_address |>
       #place == "Mo Chhu River, Punakha" ~ 27.62371,
       place == "Mo Chhu River, Punakha" ~ 27.63202, 
       place == "Sangchen Dorji Lhuendrup Nunnery" ~ 27.54797,
-      place == "Wangdue Ecolodge" ~ 27.47045,
+      #place == "Wangdue Ecolodge" ~ 27.47045,
       #place == "Lawala Pass" ~ 27.51032,
       place == "Lawala Pass (3250 m)" ~ 27.52489,
-      place == "Gangtey Monastery" ~ 27.47145,
+      #place == "Gangtey Monastery" ~ 27.47145,
+      place == "Gangtey Monastery" ~27.48485, 
+      place == "Gantye Nature Trail" ~ 27.48923,
       place == "Phobjikha View Point" ~ 27.47071,
-      place == "Black Necked Crane Visitor Centre" ~ 27.46819,
-      place == "Gangtey Tent Resort" ~ 27.47103,
+      #place == "Black Necked Crane Visitor Centre" ~ 27.46819,
+      #place == "Gangtey Tent Resort" ~ 27.47103,
+      place == "Black Necked Crane Visitor Centre" ~27.46456
       #place == "Kumbu" ~ 27.50647,
       place == "Kumbu" ~ 27.51193,
       place == "Kaychela Pass (3600 m)" ~ 27.50639,
       #place == "Longtey" ~ 27.5075,
       place == "Longtey" ~ 27.53060,
-      place == "Himalayan Keys Forest Resort" ~ 27.46988,
+      #place == "Himalayan Keys Forest Resort" ~ 27.46988,
       place == "TaBar Nye Monastery" ~ 27.51009,
       place == "Camp (3700 m)" ~ 27.50897,
       place == "Gyalpo Pelzang Peak (4200 m)" ~ 27.50863,
@@ -139,10 +148,13 @@ stops_geocoded <- stops_address |>
       place == "Wangdue Ecolodge" ~ 89.89029,
       #place == "Lawala Pass" ~ 90.15212,
       place == "Lawala Pass (3250 m)" ~ 90.17523,
-      place == "Gangtey Monastery" ~ 90.15188,
+      #place == "Gangtey Monastery" ~ 90.15188,
+      place == "Gangtey Monastery" ~ 90.16585,
+      place == "Gantye Nature Trail" ~ 90.166495,
       place == "Phobjikha View Point" ~ 90.20001,
-      place == "Black Necked Crane Visitor Centre" ~ 90.15385,
-      place == "Gangtey Tent Resort" ~ 90.15620,
+      #place == "Black Necked Crane Visitor Centre" ~ 90.15385,
+      place == "Black Necked Crane Visitor Centre" ~90.17026
+      place == "Gangtey Tent Resort" ~ 90.16570,
       #place == "Kumbu" ~ 90.19599,
       place == "Kumbu" ~ 90.18375,
       place == "Kaychela Pass (3600 m)" ~ 90.19788,
@@ -208,7 +220,7 @@ towns_geocoded <- towns |>
 all_towns_unique <- towns_geocoded |>
   distinct()
 
-all_stops_cat <- all_stops_unique %>%
+all_stops_cat <- all_stops_unique |>
   mutate(category = case_when(
     grepl("Airport", place, ignore.case = TRUE) ~ "airport",
     #grepl("Nest|Hike|Trek|Chelela", place, ignore.case = TRUE) ~ "hiking",
@@ -261,7 +273,7 @@ get_route <- function(src_coords, dst_coords, route_type) {
 #| message: false
 #| output: false
 
-routes_geocoded <- stops_sf %>%
+routes_geocoded <- stops_sf |>
   mutate(
     origin_place      = place,
     destination_place = lead(place),
@@ -269,9 +281,9 @@ routes_geocoded <- stops_sf %>%
     src_lat           = st_coordinates(geometry)[, 2],
     dest_long         = lead(st_coordinates(geometry)[, 1]),
     dest_lat          = lead(st_coordinates(geometry)[, 2])
-  ) %>%
-  filter(!is.na(destination_place)) %>%
-  rowwise() %>%
+  ) |>
+  filter(!is.na(destination_place)) |>
+  rowwise() |>
   mutate(
     route = list(get_route(
       src_coords = c(src_long, src_lat),
@@ -280,15 +292,15 @@ routes_geocoded <- stops_sf %>%
     ))
   )
 
-routes_sf <- routes_geocoded %>%
-  ungroup() %>%
-  sf::st_drop_geometry() %>%                 # drop POINT geometry from stops_sf
-  dplyr::select(-route) %>%                  # keep the attributes (day, route_type, etc.)
+routes_sf <- routes_geocoded |>
+  ungroup() |>
+  sf::st_drop_geometry() |>                 # drop POINT geometry from stops_sf
+  dplyr::select(-route) |>                  # keep the attributes (day, route_type, etc.)
   dplyr::bind_cols(
-    do.call(rbind, routes_geocoded$route) %>%  # stack all the per-segment sf frames
-      sf::st_as_sf() %>%
+    do.call(rbind, routes_geocoded$route) |>  # stack all the per-segment sf frames
+      sf::st_as_sf() |>
       dplyr::select(geometry)                  # keep just the LINESTRING column
-  ) %>%
+  ) |>
   sf::st_as_sf()
 
 ```
@@ -313,31 +325,43 @@ fa_svg_icon <- function(name, fill = "black", size = 16) {
   makeIcon(iconUrl = data_uri, iconWidth = size, iconHeight = size)
 }
 
+
 icons_svg <- iconList(
-  airport = fa_svg_icon("plane", "black"),
-  camping  = fa_svg_icon("tent",   "black"),
-  culture  = fa_svg_icon("camera", "black"),
-  rafting  = fa_svg_icon("water",  "black"),
-  pass = fa_svg_icon("mountain", "black"),
-  temple   = fa_svg_icon("vihara", "black"),
-  wildlife = fa_svg_icon("crow",   "black")
+  airport = fa_svg_icon("plane", "white"),
+  camping  = fa_svg_icon("tent",   "white"),
+  culture  = fa_svg_icon("camera", "white"),
+  rafting  = fa_svg_icon("water",  "white"),
+  pass = fa_svg_icon("mountain", "white"),
+  temple   = fa_svg_icon("vihara", "white"),
+  wildlife = fa_svg_icon("crow",   "white")
+  )
+
+icons_svg <- iconList(
+  airport = fa_svg_icon("plane", "lightgrey"),
+  camping  = fa_svg_icon("tent",   "lightgrey"),
+  culture  = fa_svg_icon("camera", "lightgrey"),
+  rafting  = fa_svg_icon("water",  "lightgrey"),
+  pass = fa_svg_icon("mountain", "lightgrey"),
+  temple   = fa_svg_icon("vihara", "lightgrey"),
+  wildlife = fa_svg_icon("crow",   "lightgrey")
   )
 
 route_legend <- tags$div(
   style = paste(
     "background: rgba(250, 250, 250);",
+    "color: #1E2019;", 
     "border: 2px solid #777;",
-    "border-top: none;",          # matches scale bar exactly
+    "border-top: none;",          
     "padding: 2px 8px 4px;",
     "font-size: 11px;",
     "line-height: 22px;"
   ),
   tags$b("Route type"), tags$br(),
   tags$span(
-    style = "display:inline-block; width:36px; height:0; border-top:4px solid #C6C1F0; vertical-align:middle; margin-right:6px;"
+    style = "display:inline-block; width:36px; height:0; border-top:4px solid #AB6AD5; vertical-align:middle; margin-right:6px;"
   ), "Driving", tags$br(),
   tags$span(
-    style = "display:inline-block; width:36px; height:0; border-top:3px dashed #F498B6; vertical-align:middle; margin-right:6px;"
+    style = "display:inline-block; width:36px; height:0; border-top:3px dashed #DC5FBD; vertical-align:middle; margin-right:6px;"
   ), "Walking"
 )
 ```
@@ -347,24 +371,28 @@ route_legend <- tags$div(
 #| message: false
 #| output: false
 
-bhutan_map <- leaflet() %>%
-  addProviderTiles("Stadia.StamenTerrainBackground") %>%
+bhutan_map1 <- leaflet() |>
+  #addProviderTiles("Stadia.StamenTerrainBackground")  |> 
+  addProviderTiles("Esri.WorldImagery")  |>
+  #addProviderTiles("OpenStreetMap.Mapnik")  |>
   addPolylines(
-    data      = routes_sf %>% filter(route_type == "driving"),
-    color     = "#C6C1F0FF",
+    data      = routes_sf |> filter(route_type == "driving"),
+    #color     = "#C6C1F0FF",
+     color     = "#AB6AD5FF",
     weight    = 4,
     opacity   = 0.8,
     dashArray = NULL
-      ) %>%
+      ) |>
   addPolylines(
-    data      = routes_sf %>% filter(route_type == "walking"),
-    color     = "#F498B6FF",
+    data      = routes_sf |> filter(route_type == "walking"),
+    #color     = "#F498B6FF",
+    color     = "#DC5FBDFF",
     weight    = 3,
     opacity   = 0.8,
     dashArray = "1, 5"
   ) |> 
   addMarkers(
-    data  = all_stops_cat %>% filter(category %in% names(icons_svg)),
+    data  = all_stops_cat |> filter(category %in% names(icons_svg)),
     lat   = ~lat, lng = ~long,
     icon  = ~icons_svg[category],
     label = ~paste0("Day ", as.integer(travel_day), ": ", place)
@@ -381,9 +409,9 @@ bhutan_map <- leaflet() %>%
       textOnly = TRUE,
       style = list(
         "font-weight" = "bold",
-        "font-size"   = "11px",
-        "color"       = "white"
-        #"text-shadow" = "1px 1px 2px black"
+        "font-size"   = "14px",
+        "color"       = "lightgrey",
+        "text-shadow" = "1px 1px 2px black"
       )
     )) |> 
   addScaleBar(position = "bottomleft", options = scaleBarOptions(maxWidth = 100, 
@@ -399,6 +427,107 @@ bhutan_map <- leaflet() %>%
 ```{r}
 #| echo: false
 #| message: false
-bhutan_map
+
+bhutan_map1
+
 ```
 
+<br>
+
+```{r}
+#| echo: false
+#| message: false
+#| output: false
+
+icons_svg <- iconList(
+  airport = fa_svg_icon("plane", "black"),
+  camping  = fa_svg_icon("tent",   "black"),
+  culture  = fa_svg_icon("camera", "black"),
+  rafting  = fa_svg_icon("water",  "black"),
+  pass = fa_svg_icon("mountain", "black"),
+  temple   = fa_svg_icon("vihara", "black"),
+  wildlife = fa_svg_icon("crow",   "black")
+  )
+
+route_legend <- tags$div(
+  style = paste(
+    "background: rgba(250, 250, 250);",
+    "color: #1E2019;", 
+    "border: 2px solid #777;",
+    "border-top: none;",          
+    "padding: 2px 8px 4px;",
+    "font-size: 11px;",
+    "line-height: 22px;"
+  ),
+  tags$b("Route type"), tags$br(),
+  tags$span(
+    style = "display:inline-block; width:36px; height:0; border-top:4px solid #C6C1F0; vertical-align:middle; margin-right:6px;"
+  ), "Driving", tags$br(),
+  tags$span(
+    style = "display:inline-block; width:36px; height:0; border-top:3px dashed #F498B6; vertical-align:middle; margin-right:6px;"
+  ), "Walking"
+)
+
+bhutan_map2 <- leaflet() |>
+  #addProviderTiles("Stadia.StamenTerrainBackground")  |> 
+  #addProviderTiles("Esri.WorldImagery")  |>
+  addProviderTiles("OpenStreetMap.Mapnik")  |>
+  addPolylines(
+    data      = routes_sf |> filter(route_type == "driving"),
+    #color     = "#C6C1F0FF",
+     color     = "#AB6AD5FF",
+    weight    = 4,
+    opacity   = 0.8,
+    dashArray = NULL
+      ) |>
+  addPolylines(
+    data      = routes_sf |> filter(route_type == "walking"),
+    #color     = "#F498B6FF",
+    color     = "#DC5FBDFF",
+    weight    = 3,
+    opacity   = 0.8,
+    dashArray = "1, 5"
+  ) |> 
+  addMarkers(
+    data  = all_stops_cat |> filter(category %in% names(icons_svg)),
+    lat   = ~lat, lng = ~long,
+    icon  = ~icons_svg[category],
+    label = ~paste0("Day ", as.integer(travel_day), ": ", place)
+    #popup = ~paste0("<b>", place, "Day: ", as.integer(travel_day))
+  ) |> 
+  addLabelOnlyMarkers(
+    data = all_towns_unique,
+    lat = ~lat,
+    lng = ~long,
+    label = ~town,
+    labelOptions = labelOptions(
+      noHide = TRUE,
+      #direction = "top",
+      textOnly = TRUE,
+      style = list(
+        "font-weight" = "bold",
+        "font-size"   = "14px",
+        "color"       = "lightgrey",
+        "text-shadow" = "1px 1px 2px black"
+      )
+    )) |> 
+  addScaleBar(position = "bottomleft", options = scaleBarOptions(maxWidth = 100, 
+                                                                 updateWhenIdle = TRUE,
+                                                                 imperial = FALSE)) |> 
+  addControl(html = route_legend, position = "bottomright", className = "route-legend")|> 
+  htmlwidgets::prependContent(
+  tags$style(HTML(".route-legend { padding: 0 !important; }"))
+)
+
+```
+
+```{r}
+#| echo: false
+#| message: false
+
+bhutan_map2
+```
+
+<br>
+
+Note: I used straight lines for the walks as the Open Source Routing Machine  did not work along the walking tracks. 
