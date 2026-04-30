@@ -14,73 +14,31 @@ library(fontawesome)
 library(htmlwidgets)
 library(webshot2)
 
-bhutan_map <- ne_states(country = "Bhutan", returnclass = "sf")
 
-clrs <- NatParksPalettes::natparks.pals("Yellowstone")
-
-ggplot() +
-  geom_sf(data = bhutan_map)
-
-
-
-# Read all photos
-# Code modified from https://www.r-bloggers.com/2016/11/extracting-exif-data-from-photos-using-r/
-
-files <- list.files(
-  path = "photos",
-  pattern = "\\.HEIC$",
-  full.names = TRUE
-)
-
-dat <- read_exif(files) |>
-  select(
-    SourceFile, DateTimeOriginal,
-    GPSLongitude, GPSLatitude,
-    GPSTimeStamp 
-  ) |> 
-  filter(!is.na(GPSLatitude))
-
-write_csv(dat, "data/exifdata.csv")
-
-# Make an interactive map
-leaflet(dat) %>%
-  addProviderTiles("Esri.WorldImagery") %>%
-  addMarkers(~GPSLongitude, ~GPSLatitude)
-
-# Make a basic map
-
-dat_geocode <- dat |>
-  st_as_sf(coords = c("GPSLongitude", "GPSLatitude"), crs = st_crs("EPSG:4326"))
-
-ggplot() +
-  geom_sf(data = bhutan_map) +
-  geom_sf(data = dat_geocode) +
-  coord_sf(crs = st_crs("ESRI:102003"))
-# Code adapted from https://www.andrewheiss.com/blog/2023/06/01/geocoding-routing-openstreetmap-r/
-
-
-
+#Generate df with addresses
 stops_address <- tribble(
-  ~day, ~place, ~address, ~route_type,
-  1, "Paro International Airport", "Paro International Airport, Paro, Bhutan", "driving",
+  ~travel_day, ~place, ~address, ~route_type,
+  0, "Paro International Airport", "Paro International Airport, Paro, Bhutan", "driving",
   1, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan", "driving",
   1, "Rinpung Dzong", "Rinpung, Paro, Bhutan", "walking",
   1, "Tshechu Festival", "Rinpung courtyard, Paro, Bhutan", "driving",
   #2, "Tiger's Nest Road End", "Road end, Paro Taktsang, Paro, Bhutan", "walking",
-  2, "Tiger's Nest", "Paro Taktsang, Paro, Bhutan", "walking",
+  2, "Tiger's Nest (3120 m)", "Paro Taktsang, Paro, Bhutan", "walking",
   2, "Taktsang trail", "Road end, Paro Taktsang, Paro, Bhutan", "driving",
   #3, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan", "driving",
   3, "Kila Goenpa Nunnery", "Kila Goenpa, Paro, Bhutan", "walking",
-  3, "Chelela Pass", "Chele La Pass, Paro, Bhutan", "driving",
+  3, "Chelela Pass (3988 m)", "Chele La Pass, Paro, Bhutan", "driving",
   3, "White Temple", "Lhakhang Karpo, Haa, Bhutan", "driving",
   3, "Sonam Zhidey Resort", "Sonam Zhidey Resort, Haa, Bhutan", "driving",
+  4, "ChuZom-Haa Highway1", "ChuZom-Haa Highway, Bhutan","driving",
+  4, "ChuZom-Haa Highway2", "ChuZom-Haa Highway, Bhutan","driving",
   #4, "Tango Roadend", "Tango Monastery Roadend, Thimphu, Bhutan", "walking",
   4, "Tango Monastery", "Tango Monastery, Thimphu, Bhutan", "walking",
   4, "Tango Roadend", "Tango Monastery Roadend, Thimphu, Bhutan", "driving",
   4, "Takin Preserve", "Motithang Takin Preserve, Thimphu, Bhutan", "driving",
   5, "Norkhil Boutique Hotel",     "Norkhil Boutique Hotel, Thimphu, Bhutan", "driving",
   5, "Folk Heritage Museum", "Folk Heritage Museum Kawajangsa, Thimphu, Bhutan", "driving",
-  6, "Dochula Pass", "Dochula Pass, Thimphu, Bhutan", "driving",
+  6, "Dochula Pass (3100 m)", "Dochula Pass, Thimphu, Bhutan", "driving",
   6, "Teoprongchu", "Teoprongchu, Bhutan", "walking",
   6, "Chimi Lhakhang (The Temple of Fertility)", "Chimi Lhakhang, Punakha, Bhutan", "walking",
   6, "Teoprongchu", "Teoprongchu, Bhutan", "driving",
@@ -90,30 +48,33 @@ stops_address <- tribble(
   7, "Sangchen Dorji Lhuendrup Nunnery", "Sangchhen Dorji Lhuendrup Nunnery, Punakha, Bhutan", "driving",
   7, "Wangdue Ecolodge", "Wangdue Ecolodge, Damina Village, Ngashigaykha, Rubesa, Wangdue Phodrang, 14001, Bhutan", "driving",
   8, "Wangdue Dzong", "Wangdue Phodrang Dzong, Wangdue Phodrang, Bhutan", "driving",
-  8, "Lawala Pass", "Lawala Pass, Dungdungneysa, Bhutan", "driving",
+  8, "Lawala Pass (3250 m)", "Lawala Pass, Dungdungneysa, Bhutan", "driving",
   8, "Gangtey Monastery", "Gangtey Monastery, Phobjikha Valley, Bhutan", "walking",
   8, "Phobjikha View Point", "Phobjikha View Point, Phobjikha Valley, Bhutan", "driving",
   8, "Black Necked Crane Visitor Centre", "Black Necked Crane Visitor Centre, Phobjikha, Bhutan", "driving",
   8, "Gangtey Tent Resort", "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan", "driving",
   9, "Kumbu", "Kumbu, Bhutan", "walking",
-  9, "Kaychela Pass", "Kaychela Pass, Bhutan","walking",
+  9, "Kaychela Pass (3600 m)", "Kaychela Pass, Bhutan","walking",
   9, "Longtey", "Longtey, Bhutan", "driving",
   9, "Gangtey Tent Resort", "Gangtey Tent Resort, Gangtey Phobjikha, Bhutan", "driving",
   10, "Himalayan Keys Forest Resort", "Himalayan Keys Forest Resort, Zhori Zur Lam, Thimphu, Bhutan", "driving",
   10, "TaBar Nye Monastery", "TaBar Nye, Thimphu, Bhutan", "walking",
-  10, "Camp", "Thadrana Telecom Tower Junction, Thimphu, Bhutan", "walking",
-  10, "Gyalpo Pelzang Peak", "Thadrana Telecom Tower point, Yusipang, Bhutan", "walking",
+  10, "Camp (3700 m)", "Thadrana Telecom Tower Junction, Thimphu, Bhutan", "walking",
+  10, "Gyalpo Pelzang Peak (4200 m)", "Thadrana Telecom Tower point, Yusipang, Bhutan", "walking",
   11, "Hontsho", "Hontsho Picnic, Hungtsho, Bhutan", "driving")
   #11, "Tashi Namgay Resort", "Tashi Namgay Resort, Paro, Bhutan"
 
-
+#Geocode the addresses using the open street map geocoding software (Nominatim)
 stops_geocoded <- stops_address |>
   geocode(address, method = "osm") |>
   mutate(
     lat = case_when(
+      place == "ChuZom-Haa Highway1" ~ 27.31161,
+      place == "ChuZom-Haa Highway2" ~ 27.19582,
       place == "Sonam Zhidey Resort" ~ 27.39062,
       place == "Rinpung Dzong" ~ 27.42960,
-      place == "Taktsang trail" ~ 27.47139,
+      #place == "Taktsang trail" ~ 27.47139,
+      place == "Taktsang trail" ~27.48180,
       place == "Tango Roadend" ~ 27.50910,
       place == "Tango Monastery" ~ 27.51028,
       #place == "Tshechu Festival" ~ 27.42908,
@@ -126,27 +87,30 @@ stops_geocoded <- stops_address |>
       place == "Sangchen Dorji Lhuendrup Nunnery" ~ 27.54797,
       place == "Wangdue Ecolodge" ~ 27.47045,
       #place == "Lawala Pass" ~ 27.51032,
-      place == "Lawala Pass" ~ 27.52489,
+      place == "Lawala Pass (3250 m)" ~ 27.52489,
       place == "Gangtey Monastery" ~ 27.47145,
       place == "Phobjikha View Point" ~ 27.47071,
       place == "Black Necked Crane Visitor Centre" ~ 27.46819,
       place == "Gangtey Tent Resort" ~ 27.47103,
       #place == "Kumbu" ~ 27.50647,
       place == "Kumbu" ~ 27.51193,
-      place == "Kaychela Pass" ~ 27.50639,
+      place == "Kaychela Pass (3600 m)" ~ 27.50639,
       #place == "Longtey" ~ 27.5075,
       place == "Longtey" ~ 27.53060,
       place == "Himalayan Keys Forest Resort" ~ 27.46988,
       place == "TaBar Nye Monastery" ~ 27.51009,
-      place == "Camp" ~ 27.50897,
-      place == "Gyalpo Pelzang Peak" ~ 27.50863,
+      place == "Camp (3700 m)" ~ 27.50897,
+      place == "Gyalpo Pelzang Peak (4200 m)" ~ 27.50863,
       place == "Hontsho" ~ 27.50726,
       TRUE ~ lat
     ),
     long = case_when(
+      place == "ChuZom-Haa Highway1" ~ 89.31698,
+      place == "ChuZom-Haa Highway2" ~ 89.49546,
       place == "Sonam Zhidey Resort" ~ 89.40642,
       #place == "Rinpung Dzong" ~ 89.40768,
-      place == "Taktsang trail" ~ 89.36045,
+      #place == "Taktsang trail" ~ 89.36045,
+      place == "Taktsang trail" ~ 89.360695,
       place == "Tango Roadend" ~ 89.63318,
       place == "Tango Monastery" ~ 89.62429,
       #place == "Tshechu Festival" ~ 89.40546,
@@ -159,38 +123,42 @@ stops_geocoded <- stops_address |>
       place == "Sangchen Dorji Lhuendrup Nunnery" ~ 89.84384,
       place == "Wangdue Ecolodge" ~ 89.89029,
       #place == "Lawala Pass" ~ 90.15212,
-      place == "Lawala Pass" ~ 90.17523,
+      place == "Lawala Pass (3250 m)" ~ 90.17523,
       place == "Gangtey Monastery" ~ 90.15188,
       place == "Phobjikha View Point" ~ 90.20001,
       place == "Black Necked Crane Visitor Centre" ~ 90.15385,
       place == "Gangtey Tent Resort" ~ 90.15620,
       #place == "Kumbu" ~ 90.19599,
       place == "Kumbu" ~ 90.18375,
-      place == "Kaychela Pass" ~ 90.19788,
+      place == "Kaychela Pass (3600 m)" ~ 90.19788,
       #place == "Longtey" ~ 90.1964,
       place == "Longtey" ~ 90.2152,
       place == "Himalayan Keys Forest Resort" ~ 89.62807,
       place == "TaBar Nye Monastery" ~ 89.67089,
-      place == "Camp" ~ 89.71630,
-      place == "Gyalpo Pelzang Peak" ~ 89.71298,
+      place == "Camp (3700 m)" ~ 89.71630,
+      place == "Gyalpo Pelzang Peak (4200 m)" ~ 89.71298,
       place == "Hontsho" ~ 89.71271,
       TRUE ~ long
     )
   )
+
+#Writing data to csv file
 write_csv(stops_geocoded, "data/stops_geocoded.csv")
-
-
 
 stops_geocoded <- read_csv("data/stops_geocoded.csv")
 
+#df within unique stops
 all_stops_unique <- stops_geocoded |>
   distinct()
 
+#Convert to a simple features object 
 stops_sf <- stops_geocoded |>
-  st_as_sf(coords = c("long", "lat"), crs = st_crs("EPSG:4326"))
+  st_as_sf(coords = c("long", "lat"), 
+           crs = st_crs("EPSG:4326")) #retreive coordinates using the WGS 84 coordinate system
 
+#Generate a town/hotel dataframe
 towns <- tribble(
-  ~day, ~town,        ~hotel,                      ~address,
+  ~travel_day, ~town,        ~hotel,                      ~address,
   1,    "Paro",       "Tashi Namgay Resort",        "Tashi Namgay Resort, Paro, Bhutan",
   2,    "Paro",       "Tashi Namgay Resort",        "Tashi Namgay Resort, Paro, Bhutan",
   3,    "Haa",        "Sonam Zhidey Resort",        "Sonam Zhidey Resort, Haa, Bhutan",
@@ -203,6 +171,7 @@ towns <- tribble(
   #10, "Thimphu", "Himalayan Keys Forest Resort", "Himalayan Keys Forest Resort, Zhori Zur Lam, Thimphu, Bhutan"
 )
 
+#Provide coordinates for hotels as these couldn't be retreived using the geocode() method
 towns_geocoded <- towns |>
   #geocode(address, method = "osm") |>
   mutate(
@@ -221,31 +190,9 @@ towns_geocoded <- towns |>
                      hotel == "Gangtey Tent Resort" ~ 90.15620))
                      #hotel == "Himalayan Keys Forest Resort" ~ 89.62807)
     
-                    
+#df with unique towns/hotels                    
 all_towns_unique <- towns_geocoded |>
   distinct()
-
-towns_sf <- towns_geocoded |>
-  st_as_sf(coords = c("long", "lat"), crs = st_crs("EPSG:4326"))
-
-towns_routes_raw <- towns_sf |>
-  select(-address) |>
-  rename(
-    origin_geometry = geometry,
-    origin_town = town
-  ) |>
-  mutate(
-    destination_geometry = lead(origin_geometry),
-    destination_place = lead(origin_place)
-  ) |>
-  filter(row_number() != n()) # remove last row
-
-towns_geocoded_raw <- towns_routes_raw %>%
-  rowwise() %>%
-  mutate(route = osrmRoute(
-    src = origin_geometry,
-    dst = destination_geometry
-  ))
 
 routes_raw <- stops_sf |>
   select(-address) |>
@@ -296,7 +243,7 @@ all_stops_cat <- all_stops_unique %>%
     grepl("View|Black|Preserve", place, ignore.case = TRUE) ~ "wildlife",
     #grepl("Resort|Ecolodge", place, ignore.case = TRUE) ~ "hotel",
     grepl("Heritage|Festival", place, ignore.case = TRUE) ~ "culture",
-    grepl("Pass", place, ignore.case = TRUE) ~ "pass",
+    grepl("Pass|Peak", place, ignore.case = TRUE) ~ "pass",
     TRUE ~ "other"
   ))
 
@@ -604,6 +551,32 @@ get_route <- function(src_coords, dst_coords, route_type) {
   }
 }
 
+##To join walking routes to roads.
+
+get_route <- function(src_coords, dst_coords, route_type) {
+  if (route_type == "walking") {
+    line <- sf::st_sfc(
+      sf::st_linestring(rbind(src_coords, dst_coords)),
+      crs = 4326
+    )
+    sf::st_sf(
+      src      = paste(src_coords, collapse = ","),
+      dst      = paste(dst_coords, collapse = ","),
+      duration = NA_real_,
+      distance = as.numeric(sf::st_length(line)) / 1000,
+      geometry = line
+    )
+  } else {
+    res    <- osrmRoute(src = src_coords, dst = dst_coords, osrm.profile = "car")
+    coords <- sf::st_coordinates(res)[, 1:2]
+    # Glue the original endpoints back on
+    full   <- rbind(src_coords, coords, dst_coords)
+    res$geometry <- sf::st_sfc(sf::st_linestring(full), crs = 4326)
+    res
+  }
+}
+
+
 # Apply to consecutive stop pairs
 routes_geocoded <- stops_sf %>%
   mutate(
@@ -661,21 +634,41 @@ fa_svg_icon <- function(name, fill = "black", size = 16) {
 }
 
 icons_svg <- iconList(
-  rafting  = fa_svg_icon("water",  "black"),
+  airport = fa_svg_icon("plane", "black"),
   camping  = fa_svg_icon("tent",   "black"),
-  temple   = fa_svg_icon("vihara", "black"),
-  wildlife = fa_svg_icon("crow",   "black"),
   culture  = fa_svg_icon("camera", "black"),
+  rafting  = fa_svg_icon("water",  "black"),
   pass = fa_svg_icon("mountain", "black"),
-  airport = fa_svg_icon("plane", "black")
-  
-)
+  temple   = fa_svg_icon("vihara", "black"),
+  wildlife = fa_svg_icon("crow",   "black")
+  )
 
 #88A0D8FF, #485898FF, #5868B0FF, #A0A0A8FF, #A0C0F8FF, #B8B8C0FF, #707080FF, #384050FF, #000000FF, #D0D0D8FF, "#C0D8E8FF", #E8F0F0FF
 "#C0D8E8FF"
 
 ###USE THIS CODE##
 #-----------------
+
+
+
+
+route_legend <- tags$div(
+  style = paste(
+    "background: rgba(250, 250, 250);",
+    "border: 2px solid #777;",
+    "border-top: none;",          # matches scale bar exactly
+    "padding: 2px 8px 4px;",
+    "font-size: 11px;",
+    "line-height: 22px;"
+  ),
+  tags$b("Route type"), tags$br(),
+  tags$span(
+    style = "display:inline-block; width:36px; height:0; border-top:4px solid #C6C1F0; vertical-align:middle; margin-right:6px;"
+  ), "Driving", tags$br(),
+  tags$span(
+    style = "display:inline-block; width:36px; height:0; border-top:3px dashed #F498B6; vertical-align:middle; margin-right:6px;"
+  ), "Walking"
+)
 
 bhutan_map <- leaflet() %>%
   addProviderTiles("Stadia.StamenTerrainBackground") %>%
@@ -697,8 +690,8 @@ bhutan_map <- leaflet() %>%
     data  = all_stops_cat %>% filter(category %in% names(icons_svg)),
     lat   = ~lat, lng = ~long,
     icon  = ~icons_svg[category],
-    label = ~place,
-    popup = ~paste0("<b>", place, "</b><br>Day: ", day, "<br>Category: ", category)
+    label = ~paste0("Day ", as.integer(travel_day), ":", place)
+    #popup = ~paste0("<b>", place, "Day: ", as.integer(travel_day))
   ) |> 
   addLabelOnlyMarkers(
     data = all_towns_unique,
@@ -718,7 +711,14 @@ bhutan_map <- leaflet() %>%
     )) |> 
   addScaleBar(position = "bottomleft", options = scaleBarOptions(maxWidth = 100, 
                                                                  updateWhenIdle = TRUE,
-                                                                 imperial = FALSE))
+                                                                 imperial = FALSE)) |> 
+  addControl(html = route_legend, position = "bottomright", className = "route-legend")|> 
+  htmlwidgets::prependContent(
+  tags$style(HTML(".route-legend { padding: 0 !important; }"))
+)
+
+bhutan_map
+
 mapview::mapshot(bhutan_map, file = "map.png")
 saveWidget(bhutan_map, "output/bhutan_map.html", selfcontained = TRUE)
 webshot("output/bhutan_map.html", file = "output/bhutan_map.png", vwidth = 900, vheight = 900)
@@ -907,4 +907,62 @@ map <- leaflet() %>%
 
 map
 
+library(magick)
+heic_files <- list.files("output", pattern = "\\.heic$", 
+                         full.names = TRUE, ignore.case = TRUE)
+
+for (f in heic_files) {
+  img <- image_read(f)
+  out <- sub("\\.heic$", ".jpg", f, ignore.case = TRUE)
+  image_write(img, path = out, format = "jpeg")
+}
+
+
+############
+#Extra code#
+############
+
+bhutan_map <- ne_states(country = "Bhutan", returnclass = "sf")
+
+clrs <- NatParksPalettes::natparks.pals("Yellowstone")
+
+ggplot() +
+  geom_sf(data = bhutan_map)
+
+
+
+# Read all photos
+# Code modified from https://www.r-bloggers.com/2016/11/extracting-exif-data-from-photos-using-r/
+
+files <- list.files(
+  path = "photos",
+  pattern = "\\.HEIC$",
+  full.names = TRUE
+)
+
+dat <- read_exif(files) |>
+  select(
+    SourceFile, DateTimeOriginal,
+    GPSLongitude, GPSLatitude,
+    GPSTimeStamp 
+  ) |> 
+  filter(!is.na(GPSLatitude))
+
+write_csv(dat, "data/exifdata.csv")
+
+# Make an interactive map
+leaflet(dat) %>%
+  addProviderTiles("Esri.WorldImagery") %>%
+  addMarkers(~GPSLongitude, ~GPSLatitude)
+
+# Make a basic map
+
+dat_geocode <- dat |>
+  st_as_sf(coords = c("GPSLongitude", "GPSLatitude"), crs = st_crs("EPSG:4326"))
+
+ggplot() +
+  geom_sf(data = bhutan_map) +
+  geom_sf(data = dat_geocode) +
+  coord_sf(crs = st_crs("ESRI:102003"))
+# Code adapted from https://www.andrewheiss.com/blog/2023/06/01/geocoding-routing-openstreetmap-r/
 
