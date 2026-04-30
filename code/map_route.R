@@ -14,6 +14,12 @@ library(fontawesome)
 library(htmlwidgets)
 library(webshot2)
 
+#Two great blogs on how to generate maps with GPS data
+#https://nrennie.rbind.io/blog/gps-route-map-r/
+#https://www.andrewheiss.com/blog/2023/06/01/geocoding-routing-openstreetmap-r/
+
+#Blogs on generating maps using leaflet
+#https://library.virginia.edu/data/articles/data-scientist-as-cartographer-an-introduction-to-making-interactive-maps-in-r-with-leaflet
 
 #Generate df with addresses
 stops_address <- tribble(
@@ -194,45 +200,9 @@ towns_geocoded <- towns |>
 all_towns_unique <- towns_geocoded |>
   distinct()
 
-routes_raw <- stops_sf |>
-  select(-address) |>
-  rename(
-    origin_geometry = geometry,
-    origin_place = place
-  ) |>
-  mutate(
-    destination_geometry = lead(origin_geometry),
-    destination_place = lead(origin_place)
-  ) |>
-  filter(row_number() != n()) # remove last row
-
-routes_geocoded_raw <- routes_raw %>%
-  rowwise() %>%
-  mutate(route = osrmRoute(
-    src = origin_geometry,
-    dst = destination_geometry
-  ))
-
-routes_geocoded <- routes_geocoded_raw %>%
-  unnest(route, names_sep = "_") %>%
-  st_set_geometry("route_geometry")
-
-leaflet(routes_geocoded) %>%
-  #addProviderTiles("Esri.WorldImagery") %>%
-  addProviderTiles("CartoDB.Positron") |>
-  addPolylines() %>%
-  addCircleMarkers(
-    lat = all_stops_unique$lat,
-    lng = all_stops_unique$long,
-     #popup = paste(df$com,"-",format(df$time,"%H:%M:%S")),
-    color = "red",
-    stroke = FALSE,
-    radius = 8,
-    fillOpacity = 0.8
-  )
 
 
-# 1. Assign categories to your stops
+# Assign categories to the stops
 all_stops_cat <- all_stops_unique %>%
   mutate(category = case_when(
     grepl("Airport", place, ignore.case = TRUE) ~ "airport",
@@ -247,79 +217,7 @@ all_stops_cat <- all_stops_unique %>%
     TRUE ~ "other"
   ))
 
-# 2. Define icons for each category
-icons <- awesomeIconList(
-  airport  = makeAwesomeIcon(icon = "plane", library = "fa", markerColor = "blue"),
-  rafting   = makeAwesomeIcon(icon = "canoe-person", library = "fa", markerColor = "green"),
-  camping  = makeAwesomeIcon(icon = "tent", library = "fa", markerColor = "orange"),
-  temple   = makeAwesomeIcon(icon = "landmark", library = "fa", markerColor = "red"),
-  wildlife   = makeAwesomeIcon(icon = "leaf", library = "fa", markerColor = "darkgreen"),
-  culture  = makeAwesomeIcon(icon = "camera", library = "fa", markerColor = "white")
- # hotel = makeAwesomeIcon(icon = "bed", library = "fa", markerColor = "white")
-)
 
-# 3. Build the map
-leaflet(routes_geocoded) %>%
-  #addProviderTiles("Esri.WorldImagery") %>%
-  addProviderTiles("CartoDB.Positron") |> 
-  # Route lines, coloured by day
-  addPolylines(
-    #color = ~ colorFactor("RdYlBu", domain = routes_geocoded$day)(day),
-    weight = 3,
-    opacity = 0.8
-    #popup = ~ paste(
-     # "Day", day, "<br>", origin_place, "→", destination_place,
-      #"<br>Distance:", round(route_distance, 1), "km",
-      #"<br>Duration:", round(route_duration, 1), "mins"
-    
-  ) %>%
-  # Place markers with category icons
-  addAwesomeMarkers(
-    data = all_stops_cat %>% filter(category != "other"),
-    lat = ~lat,
-    lng = ~long,
-    icon = ~ icons[category],
-    label = ~place # hover label = place name
-    #popup = ~ paste0(
-     # "<b>", place, "</b><br>",
-      #"Day: ", day, "<br>",
-      #"Category: ", category
-    ) %>%
-  # Place name labels (permanent, not just on hover)
-  addLabelOnlyMarkers(
-    data = all_stops_cat,
-    lat = ~lat,
-    lng = ~long,
-    label = ~place,
-    labelOptions = labelOptions(
-      noHide = TRUE,
-      direction = "top",
-      textOnly = TRUE,
-      style = list(
-        "font-weight" = "bold",
-        "font-size"   = "11px",
-        "color"       = "white",
-        "text-shadow" = "1px 1px 2px black"
-      )
-    )
-  ) 
-#%>%
-  # Legend for icon categories
- # addLegend(
-    position = "bottomright",
-    colors   = c("blue", "green", "orange", "red", "darkgreen", "purple"),
-    labels   = c("Airport", "Hiking", "Camping", "Temple/Monastery", "Nature", "Culture"),
-    title    = "Place type",
-    opacity  = 0.8
-  )
-#icons_square <- awesomeIconList(
- # airport  = makeAwesomeIcon(icon = "plane",    library = "fa", markerColor = "white", iconColor = "blue",      squareMarker = TRUE),
-  #rafting  = makeAwesomeIcon(icon = "ship",     library = "fa", markerColor = "white", iconColor = "green",     squareMarker = TRUE),
-  #camping  = makeAwesomeIcon(icon = "fire",     library = "fa", markerColor = "white", iconColor = "orange",    squareMarker = TRUE),
-  #temple   = makeAwesomeIcon(icon = "building", library = "fa", markerColor = "white", iconColor = "red",       squareMarker = TRUE),
-  #wildlife = makeAwesomeIcon(icon = "leaf",     library = "fa", markerColor = "white", iconColor = "darkgreen", squareMarker = TRUE),
-  #culture  = makeAwesomeIcon(icon = "camera",   library = "fa", markerColor = "white", iconColor = "purple",    squareMarker = TRUE)
-#)
 
 leaflet(routes_geocoded) %>%
   addProviderTiles("CartoDB.Positron") %>%
@@ -966,3 +864,122 @@ ggplot() +
   coord_sf(crs = st_crs("ESRI:102003"))
 # Code adapted from https://www.andrewheiss.com/blog/2023/06/01/geocoding-routing-openstreetmap-r/
 
+
+#Example of how to generate routes for just driving (no function needed)
+
+routes_raw <- stops_sf |>
+  select(-address, route_type) |>
+  rename(
+    origin_geometry = geometry,
+    origin_place = place
+  ) |>
+  mutate(
+    destination_geometry = lead(origin_geometry),
+    destination_place = lead(origin_place)
+  ) |>
+  filter(row_number() != n()) # remove last row
+
+routes_geocoded_raw <- routes_raw %>%
+  rowwise() %>%
+  mutate(route = osrmRoute(
+    src = origin_geometry,
+    dst = destination_geometry
+  ))
+
+routes_geocoded <- routes_geocoded_raw %>%
+  unnest(route, names_sep = "_") %>%
+  st_set_geometry("route_geometry")
+
+leaflet(routes_geocoded) %>%
+  #addProviderTiles("Esri.WorldImagery") %>%
+  addProviderTiles("CartoDB.Positron") |>
+  addPolylines() %>%
+  addCircleMarkers(
+    lat = all_stops_unique$lat,
+    lng = all_stops_unique$long,
+    #popup = paste(df$com,"-",format(df$time,"%H:%M:%S")),
+    color = "red",
+    stroke = FALSE,
+    radius = 8,
+    fillOpacity = 0.8
+  )
+
+#You can provide the name of the fontawesome icon provided (instead of using the svg icons) it's in the version of fontawesome you're using
+#Some of the icons I'm using are not in version 4.7
+
+# Define icons for each category
+icons <- awesomeIconList(
+  airport  = makeAwesomeIcon(icon = "plane", library = "fa", markerColor = "blue"),
+  rafting   = makeAwesomeIcon(icon = "canoe-person", library = "fa", markerColor = "green"),
+  camping  = makeAwesomeIcon(icon = "tent", library = "fa", markerColor = "orange"),
+  temple   = makeAwesomeIcon(icon = "landmark", library = "fa", markerColor = "red"),
+  wildlife   = makeAwesomeIcon(icon = "leaf", library = "fa", markerColor = "darkgreen"),
+  culture  = makeAwesomeIcon(icon = "camera", library = "fa", markerColor = "white")
+  # hotel = makeAwesomeIcon(icon = "bed", library = "fa", markerColor = "white")
+)
+
+# 3. Build the map
+leaflet(routes_geocoded) %>%
+  #addProviderTiles("Esri.WorldImagery") %>%
+  addProviderTiles("CartoDB.Positron") |> 
+  # Route lines, coloured by day
+  addPolylines(
+    #color = ~ colorFactor("RdYlBu", domain = routes_geocoded$day)(day),
+    weight = 3,
+    opacity = 0.8
+    #popup = ~ paste(
+    # "Day", day, "<br>", origin_place, "→", destination_place,
+    #"<br>Distance:", round(route_distance, 1), "km",
+    #"<br>Duration:", round(route_duration, 1), "mins"
+    
+  ) %>%
+  # Place markers with category icons
+  addAwesomeMarkers(
+    data = all_stops_cat %>% filter(category != "other"),
+    lat = ~lat,
+    lng = ~long,
+    icon = ~ icons[category],
+    label = ~place # hover label = place name
+    #popup = ~ paste0(
+    # "<b>", place, "</b><br>",
+    #"Day: ", day, "<br>",
+    #"Category: ", category
+  ) %>%
+  # Place name labels (permanent, not just on hover)
+  addLabelOnlyMarkers(
+    data = all_stops_cat,
+    lat = ~lat,
+    lng = ~long,
+    label = ~place,
+    labelOptions = labelOptions(
+      noHide = TRUE,
+      direction = "top",
+      textOnly = TRUE,
+      style = list(
+        "font-weight" = "bold",
+        "font-size"   = "11px",
+        "color"       = "white",
+        "text-shadow" = "1px 1px 2px black"
+      )
+    )
+  ) 
+
+#Note if ORSM server doesn't work other options could be
+#Use OpenRouteService (free API key required) — more reliable for Bhutan:
+  
+  library(openrouteservice)
+ors_api_key("YOUR_KEY")
+ors_directions(coordinates = list(c(89.42226, 27.39993), c(89.42226, 27.39993)))
+
+#Add profile-switching + error handling to your current code:
+
+routes_geocoded_raw <- routes_raw %>%
+  rowwise() %>%
+  mutate(route = {
+    profile <- if (route_type == "walking") "foot" else "car"
+    options(osrm.server = "https://routing.openstreetmap.de/", osrm.profile = profile)
+    tryCatch(
+      osrmRoute(src = origin_geometry, dst = destination_geometry),
+      error = function(e) { message(origin_place, ": ", e$message); NULL }
+    )
+  })
