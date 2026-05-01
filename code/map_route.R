@@ -773,150 +773,12 @@ elev_plot <- ggplot(elevation_df, aes(x = cum_dist, y = elevation)) +
   )
 
 
-library(htmlwidgets)
-
-
-library(htmltools)
-
-
 # Save plot as PNG for embedding
 
 tmp_plot <- tempfile(fileext = ".png")
 
 
 ggsave(tmp_plot, elev_plot, width = 5, height = 2, dpi = 150)
-
-
-# Encode as base64
-
-library(base64enc)
-
-
-plot_b64 <- base64encode(tmp_plot)
-
-
-plot_html <- paste0(
-  '<img src="data:image/png;base64,',
-  plot_b64,
-
-  '" style="width:400px; height:160px;">'
-)
-
-
-# Build map with embedded elevation plot
-
-map <- leaflet() |>
-
-  addProviderTiles("Esri.WorldImagery") |>
-
-  # Driving routes
-
-  addPolylines(
-    data = routes_geocoded |> filter(route_type == "driving"),
-
-    color = ~ colorFactor(
-      viridisLite::cividis(12, direction = -1),
-
-      domain = day
-    )(day),
-
-    weight = 4,
-
-    opacity = 0.9
-  ) |>
-
-  # Walking routes
-
-  addPolylines(
-    data = routes_geocoded |> filter(route_type == "walking"),
-
-    color = ~ colorFactor(
-      viridisLite::cividis(12, direction = -1),
-
-      domain = day
-    )(day),
-
-    weight = 4,
-
-    opacity = 0.9,
-
-    dashArray = "8, 6"
-  ) |>
-
-  # Markers and labels
-
-  addMarkers(
-    data = all_stops_cat |> filter(category %in% names(fa_icons)),
-
-    lat = ~lat,
-
-    lng = ~long,
-
-    icon = ~ fa_icons[category],
-
-    label = ~place,
-
-    popup = ~ paste0("<b>", place, "</b><br>Day: ", day)
-  ) |>
-
-  addLabelOnlyMarkers(
-    data = all_stops_cat,
-
-    lat = ~lat,
-
-    lng = ~long,
-
-    label = ~place,
-
-    labelOptions = labelOptions(
-      noHide = TRUE,
-
-      direction = "top",
-
-      textOnly = TRUE,
-
-      style = list(
-        "font-weight" = "bold",
-        "font-size" = "11px",
-
-        "color" = "white",
-        "text-shadow" = "1px 1px 2px black"
-      )
-    )
-  ) |>
-
-  # Embed elevation plot as a control in bottom left
-
-  addControl(
-    html = plot_html,
-
-    position = "bottomleft"
-  )
-
-
-map
-
-
-library(magick)
-
-
-heic_files <- list.files(
-  "output",
-
-  pattern = "\\.heic$",
-
-  full.names = TRUE,
-  ignore.case = TRUE
-)
-
-
-for (f in heic_files) {
-  img <- image_read(f)
-
-  out <- sub("\\.heic$", ".jpg", f, ignore.case = TRUE)
-
-  image_write(img, path = out, format = "jpeg")
-}
 
 
 ############
@@ -1369,3 +1231,26 @@ ggplot() +
 
     crs = st_crs("ESRI:102003")
   )
+
+#Converting heic files to jpegs
+
+library(magick)
+
+
+heic_files <- list.files(
+  "output",
+
+  pattern = "\\.heic$",
+
+  full.names = TRUE,
+  ignore.case = TRUE
+)
+
+
+for (f in heic_files) {
+  img <- image_read(f)
+
+  out <- sub("\\.heic$", ".jpg", f, ignore.case = TRUE)
+
+  image_write(img, path = out, format = "jpeg")
+}
