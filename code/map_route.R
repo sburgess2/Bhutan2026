@@ -562,63 +562,40 @@ route_legend <- tags$div(
 )
 
 
+#Note leafllet uses EPSG3857(Mercator) for renderint map tiles, it handles the projection.
 bhutan_map <- leaflet() |>
-
   addProviderTiles("Stadia.StamenTerrainBackground") |>
-
   addPolylines(
     data = routes_sf |> filter(route_type == "driving"),
-
     color = "#C6C1F0FF",
-
     weight = 4,
-
     opacity = 0.8,
-
     dashArray = NULL
   ) |>
-
   addPolylines(
     data = routes_sf |> filter(route_type == "walking"),
-
     color = "#F498B6FF",
-
     weight = 3,
-
     opacity = 0.8,
-
     dashArray = "1, 5"
   ) |>
-
   addMarkers(
     data = all_stops_cat |> filter(category %in% names(icons_svg)),
-
     lat = ~lat,
     lng = ~long,
-
     icon = ~ icons_svg[category],
-
     label = ~ paste0("Day ", as.integer(travel_day), ":", place)
-
     # popup = ~paste0("<b>", place, "Day: ", as.integer(travel_day))
   ) |>
-
   addLabelOnlyMarkers(
     data = all_towns_unique,
-
     lat = ~lat,
-
     lng = ~long,
-
     label = ~town,
-
     labelOptions = labelOptions(
       noHide = TRUE,
-
       # direction = "top",
-
       textOnly = TRUE,
-
       style = list(
         "font-weight" = "bold",
 
