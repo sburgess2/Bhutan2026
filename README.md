@@ -12,8 +12,7 @@ An interactive travel map built with R and Quarto, documenting a two-week holida
 
 This project visualises a travel route through Bhutan using two interactive maps:
 
-- **Interactive topographic map** — shows the terrain
-- **Interactive town map** — zoom in to explore each town visited
+**Interactive maps** — to explore the terrain and each town visited. 
 
 ---
 
